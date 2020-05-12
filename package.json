@@ -6,8 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "npm run build && nodemon dist/index.js",
-    "serve": "npm run build && node dist/index.js",
+    "start": "nodemon -r esm src/index.js",
     "test": "npm run build && mocha --require @babel/register"
   },
   "author": "Krishna Maurya <mauryakrishna1@gmail.com>",
@@ -21,6 +20,7 @@
   },
   "dependencies": {
     "apollo-server-express": "2.13.0",
+    "esm": "3.2.25",
     "express": "4.17.1",
     "graphql-playground-middleware-express": "1.7.14"
   }
