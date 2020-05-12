@@ -1,16 +1,16 @@
 {
-  "name": "example-node-server",
-  "version": "1.0.0",
-  "description": "Example Node Server w/ Babel",
-  "main": "lib/index.js",
+  "name": "experiences-data-server",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A data server for world of expriences.",
+  "main": "src/index.js",
   "scripts": {
-    "build": "babel lib -d dist",
+    "build": "babel src -d dist",
     "start": "npm run build && nodemon dist/index.js",
     "serve": "npm run build && node dist/index.js",
     "test": "npm run build && mocha --require @babel/register"
   },
-  "author": "James Kyle <me@thejameskyle.com>",
-  "license": "ISC",
+  "author": "Krishna Maurya <mauryakrishna1@gmail.com>",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
@@ -18,5 +18,10 @@
     "@babel/register": "^7.4.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.17.5"
+  },
+  "dependencies": {
+    "apollo-server-express": "2.13.0",
+    "express": "4.17.1",
+    "graphql-playground-middleware-express": "1.7.14"
   }
 }
