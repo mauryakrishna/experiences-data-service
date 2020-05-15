@@ -12,7 +12,26 @@ const conf = config();
 // Get config for server setup
 const { environment, port, proxies } = conf;
 
-const server = new ApolloServer({ schema });
+const requestlogging = {
+  requestDidStart(requestContext) {
+    console.log('Request', requestContext.query);
+  }
+}
+
+const server = new ApolloServer({
+  schema,
+  plugins: [],//requestlogging
+  onHealthCheck: () => {
+    return new Promise((resolve, reject) => {
+      // Replace the `true` in this conditional with more specific checks!
+      if (true) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  }
+});
 
 const corsOptions = {
   credentials: true,
