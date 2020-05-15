@@ -14,20 +14,32 @@ const { environment, port, proxies } = conf;
 
 const server = new ApolloServer({ schema });
 
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    if (
+      origin === undefined ||
+      origin === 'http://localhost:4000' ||
+      origin === 'http://localhost:3000'
+    ) {
+      callback(null, true);
+    } else {
+      callback(new Error(`${origin} Not allowed by CORS`));
+    }
+  }
+}
+
 // GraphiQL, a visual editor for queries
 if (environment !== 'production') {
   app.use('/playground', expressPlayground({
     playground: true,
     endpoint: '/',
     settings: {
+      'editor.theme': 'light',
       'request.credentials': 'include', // Tell it to pass cookies so we can use the playground on staging }));
     }
   }))
 }
-// const routes = express.Router();
-// routes.get('/', () => { console.log('Health up!!!') });
-
-// app.use('/', routes);
 
 // Add env variables to the server
 app.env = {
@@ -35,7 +47,7 @@ app.env = {
   port
 };
 
-server.applyMiddleware({ app, path: '/' });
+server.applyMiddleware({ app, cors: corsOptions, path: '/gql' });
 
 app.listen(port, '0.0.0.0', err => {
   if (err) {
