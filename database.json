@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "driver": "mysql",
+    "host": "mysql",
+    "port": "3306",
+    "user": "root",
+    "password": "root",
+    "database": "exp"
+  },
+  "prod": {
+    "driver": "mysql",
+    "host": {
+      "ENV": "MYSQL_HOST"
+    },
+    "user": {
+      "ENV": "MYSQL_USER"
+    },
+    "password": {
+      "ENV": "MYSQL_PASSWORD"
+    },
+    "database": {
+      "ENV": "MYSQL_DATABASE"
+    }
+  },
+  "sql-file": true
+}

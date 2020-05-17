@@ -2,13 +2,16 @@ import http from 'http';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
-
+import devenv from 'env2';
 import config from './config';
 import schema from './schema';
 
 const app = express();
 const conf = config();
 
+if (process.env.NODE_ENV === 'development') {
+  devenv('./devenv.json');
+}
 // Get config for server setup
 const { environment, port, proxies } = conf;
 
