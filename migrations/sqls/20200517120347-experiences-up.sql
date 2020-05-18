@@ -10,6 +10,6 @@ CREATE TABLE `experiences` (
   `publishdate` timestamp DEFAULT NULL, 
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
   INDEX (`slug`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
