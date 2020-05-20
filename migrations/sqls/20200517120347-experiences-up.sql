@@ -2,8 +2,9 @@
 CREATE TABLE `experiences` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `authorid` bigint(10) NOT NULL,
-  `slug` varchar(255) NOT NULL DEFAULT '',
-  `title` varchar(500) NOT NULL DEFAULT '',
+  `slug` varchar(255) DEFAULT NULL,
+  `title` varchar(500) DEFAULT NULL,
+  `subtitle` varchar(2000) DEFAULT NULL,
   `experience` JSON,
   `tags` varchar(1000) DEFAULT NULL,
   `readcount` bigint(10) DEFAULT 0,

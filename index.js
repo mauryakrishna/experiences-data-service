@@ -1,19 +1,19 @@
-import http from 'http';
+
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
-import devenv from 'env2';
-import config from './config';
-import schema from './schema';
 
 const app = express();
-const conf = config();
 
-if (process.env.NODE_ENV === 'development') {
-  devenv('./devenv.json');
+if (process.env.NODE_ENV == 'development') { 
+  require('env2')('./devenv.json');
 }
-// Get config for server setup
-const { environment, port, proxies } = conf;
+
+// using console for logging
+global.logger = console;
+
+// do not change below line to import statement there can problem
+const schema = require('./src/schema.js').default;
 
 const requestlogging = {
   requestDidStart(requestContext) {
@@ -51,8 +51,10 @@ const corsOptions = {
   }
 }
 
+const { NODE_ENV, PORT } = process.env;
+
 // GraphiQL, a visual editor for queries
-if (environment !== 'production') {
+if (NODE_ENV !== 'production') {
   app.use('/playground', expressPlayground({
     playground: true,
     endpoint: '/',
@@ -65,17 +67,17 @@ if (environment !== 'production') {
 
 // Add env variables to the server
 app.env = {
-  environment,
-  port
+  NODE_ENV,
+  PORT
 };
 
 server.applyMiddleware({ app, cors: corsOptions, path: '/gql' });
 
-app.listen(port, '0.0.0.0', err => {
+app.listen(PORT, '0.0.0.0', err => {
   if (err) {
     console.error(err);
     process.exit(0);
   }
-
-  console.log(`Running server at http://localhost:${port} in ${environment}`);
+  
+  console.log(`Running server at http://localhost:${PORT} in ${NODE_ENV}`);
 });

@@ -3,13 +3,18 @@
   "version": "0.0.1",
   "private": true,
   "description": "A data server for world of expriences.",
-  "main": "src/index.js",
+  "main": "./index.js",
+  "module": "./index.js",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "nodemon -r esm src/index.js",
+    "start": "nodemon -r esm ./index.js",
+    "dev": "NODE_ENV=development nodemon -r esm ./index.js",
     "test": "npm run build && mocha --require @babel/register"
   },
   "author": "Krishna Maurya <mauryakrishna1@gmail.com>",
+  "esm": {
+    "await": true
+  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
@@ -25,6 +30,7 @@
     "env2": "2.2.2",
     "esm": "3.2.25",
     "express": "4.17.1",
-    "graphql-playground-middleware-express": "1.7.14"
+    "graphql-playground-middleware-express": "1.7.14",
+    "mysql": "2.18.1"
   }
 }

@@ -1,16 +1,19 @@
+
 import { makeExecutableSchema, gql } from 'apollo-server-express';
-import { exampleupdate, examplequery } from './resolvers';
+import { exampleupdate, examplequery, saveExperience } from './resolvers';
 import types from './types';
 
 const Query = gql`
   type Query {
     examplequery: ExampleType
+    getexperience(slug: String!): Experience
   }
 `;
 
 const Mutation = gql`
   type Mutation {
     exampleupdate: ExampleType
+    saveExperience(input: SaveExperienceInput): Experience
   }
 `;
 
@@ -21,7 +24,8 @@ const resolvers = {
     examplequery
   },
   Mutation: {
-    exampleupdate
+    exampleupdate,
+    saveExperience
   }
 };
 
