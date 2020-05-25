@@ -11,6 +11,14 @@ const Experiences = gql`
     readcount: Int
     publishdate: String
   }
+
+  type SaveExperienceResponse {
+    id: Int!
+  }
+
+  type UpdateExperienceResponse {
+    updated: Boolean!
+  }
 `;
 
 const ExperiencesInput = gql`
@@ -20,6 +28,11 @@ const ExperiencesInput = gql`
     subtitle: String
     experience: String!
     tags: String
+  }
+
+  input UpdateExperienceInput {
+    id: Int!
+    experience: String!
   }
 `;
 export { Experiences, ExperiencesInput };

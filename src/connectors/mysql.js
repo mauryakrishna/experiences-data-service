@@ -1,3 +1,4 @@
+import util from 'util';
 import mysql from 'mysql';
 
 const mysqlconfig = {
@@ -12,44 +13,8 @@ const mysqlconfig = {
 // Workaround just to avoid solving into error of logger not define
 const logger = console.log;
 
-const pool = mysql.createPool(mysqlconfig);
+const conn = mysql.createConnection(mysqlconfig);
 
-const query = (query, params, callback) => {
-  if (process.env.LOG_MYSQL_LATENCY) {
-    console.time('mysql_connection_latency');
-  }
+const query = util.promisify(conn.query).bind(conn);
 
-  pool.getConnection((err, conn) => {
-    if (err != null) {
-      logger(`[ERROR] Failed to get connection from mysql ${err}`);
-      if (conn != null) {
-        conn.release();
-      }
-      if (callback != null) {
-        if (process.env.LOG_MYSQL_LATENCY) { 
-          console.timeEnd('mysql_connection_latency')
-        }
-        return callback('DB error');
-      }
-    }
-    conn.query(query, params, (_err, rows) => {
-      if (process.env.LOG_MYSQL_LATENCY) {
-        console.timeEnd('mysql_connection_latency');
-      }
-      if (_err != null) {
-        logger(_err, true)
-      }
-      conn.release()
-      if (callback != null) {
-        return callback(_err, rows)
-      }
-    })
-  });
-};
-
-const end = (callback) => {
-  pool.end(callback)
-};
-
-const _mysql = { query, end }
-export default _mysql;
+export default { query };

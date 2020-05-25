@@ -1,8 +1,3 @@
-import { examplequery, exampleupdate } from './exampleresolver';
-import { saveExperience } from './saveexperience';
+export * from './exampleresolver';
+export * from './experiences';
 
-export {
-  examplequery,
-  exampleupdate,
-  saveExperience
-}
