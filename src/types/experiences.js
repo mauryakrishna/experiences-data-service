@@ -24,10 +24,7 @@ const Experiences = gql`
 const ExperiencesInput = gql`
   input SaveExperienceInput {
     authorid: Int!
-    title: String!
-    subtitle: String
     experience: String!
-    tags: String
   }
 
   input UpdateExperienceInput {

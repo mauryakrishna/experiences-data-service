@@ -2,14 +2,14 @@
 import mysql from '../connectors/mysql';
 
 const saveExperience = async (_, { input }, context) => { 
-  const { authorid, title, experience } = input;
+  const { authorid, experience } = input;
 
   const query = `
-    INSERT INTO experiences (authorid, title, experience)
-    VALUES (?, ?, ?);
+    INSERT INTO experiences (authorid, experience)
+    VALUES (?, ?);
   `;
 
-  const result = await mysql.query(query, [authorid, title, experience]);
+  const result = await mysql.query(query, [authorid, experience]);
 
   return {id: result.insertId};
 }
