@@ -31,5 +31,16 @@ const ExperiencesInput = gql`
     id: Int!
     experience: String!
   }
+
+  input SaveTitleInput {
+    authorid: Int!
+    title: String!
+  }
+
+  input UpdateTitleInput {
+    id: Int!
+    title: String!
+  }
 `;
+
 export { Experiences, ExperiencesInput };

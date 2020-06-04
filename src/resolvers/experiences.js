@@ -1,7 +1,7 @@
 
 import mysql from '../connectors/mysql';
 
-const saveExperience = async (_, { input }, context) => { 
+export const saveExperience = async (_, { input }, context) => { 
   const { authorid, experience } = input;
 
   const query = `
@@ -14,7 +14,7 @@ const saveExperience = async (_, { input }, context) => {
   return {id: result.insertId};
 }
 
-const updateExperience = async (_, { input }, context) => {
+export const updateExperience = async (_, { input }, context) => {
   const { id, experience } = input;
 
   const query = `
@@ -28,7 +28,7 @@ const updateExperience = async (_, { input }, context) => {
   return { updated: !!result.changedRows };
 };
 
-const getExperience = async (_, { input }, context) => {
+export const getExperience = async (_, { input }, context) => {
   const { slug } = input;
 
   const query = `
@@ -36,9 +36,33 @@ const getExperience = async (_, { input }, context) => {
     WHERE slug = ? 
   `;
 
-  const result = mysql.query(query, [slug]);
+  const result = await mysql.query(query, [slug]);
 
   return result[0];
 };
 
-export { saveExperience, updateExperience, getExperience };
+export const saveTitle = async (_, { input }, context) => { 
+  console.log('savetitle', input);
+  const { authorid, title } = input;
+
+  const query = `
+    INSERT INTO experiences (authorid, title)
+    VALUES (?,?)
+  `;
+
+  const result = await mysql.query(query, [authorid, title]);
+
+  return {id: result.insertId};
+}
+
+export const updateTitle = async (_, { input }, context) => { 
+  const { id, title } = input;
+
+  const query = `
+    UPDATE experiences (title)
+    SET title = ?
+    WHERE id = ?
+  `;
+
+  const result = await mysql.query(query, [title, id]);
+}
