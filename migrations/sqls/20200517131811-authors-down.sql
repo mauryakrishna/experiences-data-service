@@ -1,2 +1,2 @@
 /* Replace with your SQL commands */
-DROP TABLE `authors` IF EXISTS;
+DROP TABLE  IF EXISTS `authors`;
