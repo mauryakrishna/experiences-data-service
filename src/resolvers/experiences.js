@@ -19,7 +19,7 @@ export const updateExperience = async (_, { input }, context) => {
   const { id, experience } = input;
 
   const query = `
-    UPDATE experiences (exprience)
+    UPDATE experiences
     SET experience = ?
     WHERE id = ?
   `;
@@ -51,8 +51,10 @@ const getSlugKey = () => {
 }
 
 export const saveTitle = async (_, { input }, context) => { 
-  
+
+  console.log('before', input);
   const { authorid, title } = input;
+  console.log('after', authorid);
 
   const slug = getSlug(title);
   const slugKey = getSlugKey();
@@ -70,13 +72,34 @@ export const saveTitle = async (_, { input }, context) => {
 export const updateTitle = async (_, { input }, context) => { 
   const { id, title } = input;
 
+  console.log('updateTitle', id, title);
+
   const slug = getSlug(title);
+  
+  let query = `
+      UPDATE experiences
+      SET title = '${title}', slug = '${slug}'
+      WHERE id = ${id}
+    `;
+  let params = [title, slug, id];
 
-  const query = `
-    UPDATE experiences (slug, title)
-    SET title = ?, slug = ?
-    WHERE id = ?
-  `;
+  const slugKeyExistsQuery = `SELECT slugkey FROM experiences Where id = ?`;
 
-  const result = await mysql.query(query, [title, slug, id]);
+  const slugKeyResult = await mysql.query(slugKeyExistsQuery, [id]);
+
+  // this is when id for experience already exists and then updating title of the experience
+  // slugkey did not exists
+  if (slugKeyResult && slugKeyResult.length == 0) {
+    const slugkey = getSlugKey();
+    query = `
+      UPDATE experiences
+      SET title = ${title}, slug = ${slug}, slugkey = ${slugkey}
+      WHERE id = ${id}
+    `;
+    params = [title, slug, slugkey, id];
+  }
+
+  const result = await mysql.query(query, params);
+
+  return { updated: !!result.changedRows };
 }

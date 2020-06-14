@@ -13,7 +13,7 @@ CREATE TABLE `experiences` (
   `publishdate` timestamp DEFAULT NULL, 
   `hidedate` timestamp DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX (`slugkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
