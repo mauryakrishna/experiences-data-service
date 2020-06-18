@@ -10,7 +10,7 @@ export const saveExperience = async (_, { input }, context) => {
     VALUES (?, ?);
   `;
 
-  const result = await mysql.query(query, [authorid, experience]);
+  const result = await mysql.query(query, [authorid, JSON.stringify(experience)]);
 
   return {id: result.insertId};
 }
@@ -24,7 +24,7 @@ export const updateExperience = async (_, { input }, context) => {
     WHERE id = ?
   `;
 
-  const result = await mysql.query(query, [experience, id]);
+  const result = await mysql.query(query, [JSON.stringify(experience), id]);
 
   return { updated: !!result.changedRows };
 };
@@ -52,9 +52,7 @@ const getSlugKey = () => {
 
 export const saveTitle = async (_, { input }, context) => { 
 
-  console.log('before', input);
   const { authorid, title } = input;
-  console.log('after', authorid);
 
   const slug = getSlug(title);
   const slugKey = getSlugKey();
@@ -71,8 +69,6 @@ export const saveTitle = async (_, { input }, context) => {
 
 export const updateTitle = async (_, { input }, context) => { 
   const { id, title } = input;
-
-  console.log('updateTitle', id, title);
 
   const slug = getSlug(title);
   

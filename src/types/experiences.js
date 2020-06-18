@@ -7,7 +7,7 @@ const Experiences = gql`
     authorid: Int
     title: String!
     subtitle: String
-    experience: String!
+    experience: JSONObject!
     readcount: Int
     publishdate: String
   }
@@ -22,14 +22,15 @@ const Experiences = gql`
 `;
 
 const ExperiencesInput = gql`
+
   input SaveExperienceInput {
     authorid: Int!
-    experience: String!
+    experience: JSONObject!
   }
 
   input UpdateExperienceInput {
     id: Int!
-    experience: String!
+    experience: JSONObject!
   }
 
   input SaveTitleInput {
