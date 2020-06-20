@@ -8,6 +8,8 @@ const Experiences = gql`
     title: String!
     subtitle: String
     experience: JSONObject!
+    slug: String
+    slugkey: String
     readcount: Int
     publishdate: String
   }

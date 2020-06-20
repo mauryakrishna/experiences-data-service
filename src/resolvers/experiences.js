@@ -2,6 +2,14 @@ import slugify from 'slugify';
 
 import mysql from '../connectors/mysql';
 
+const getSlug = (title) => { 
+  return slugify(title, {lower: true});
+}
+
+const getSlugKey = () => { 
+  return Math.random().toString(36).slice(2);
+}
+
 export const saveExperience = async (_, { input }, context) => { 
   const { authorid, experience } = input;
 
@@ -29,26 +37,34 @@ export const updateExperience = async (_, { input }, context) => {
   return { updated: !!result.changedRows };
 };
 
-export const getExperience = async (_, { input }, context) => {
-  const { slug } = input;
-
+// for first 20 experience loading and infinite scroll
+export const getExperiences = async (_, __, context) => {
   const query = `
     SELECT * FROM experiences
-    WHERE slug = ? 
+    ORDER BY created_at DESC
+    LIMIT 20
   `;
 
-  const result = await mysql.query(query, [slug]);
+  const result = await mysql.query(query, [0]);
+
+  return result;
+};
+
+export const getAnExperience = async (_, { input }, context) => { 
+  const { slug } = input;
+  
+  //  extract slugkey from slug
+  const slugkey = slug;
+  
+  const query = `
+    SELECT * FROM experiences
+    WHERE slugkey = ? AND ispublished = ?
+  `;
+
+  const result = await mysql.query(query, [slugKey, true]);
 
   return result[0];
 };
-
-const getSlug = (title) => { 
-  return slugify(title, {lower: true});
-}
-
-const getSlugKey = () => { 
-  return Math.random().toString(36).slice(2);
-}
 
 export const saveTitle = async (_, { input }, context) => { 
 
@@ -77,7 +93,6 @@ export const updateTitle = async (_, { input }, context) => {
       SET title = '${title}', slug = '${slug}'
       WHERE id = ${id}
     `;
-  let params = [title, slug, id];
 
   const slugKeyExistsQuery = `SELECT slugkey FROM experiences Where id = ?`;
 
@@ -92,10 +107,9 @@ export const updateTitle = async (_, { input }, context) => {
       SET title = ${title}, slug = ${slug}, slugkey = ${slugkey}
       WHERE id = ${id}
     `;
-    params = [title, slug, slugkey, id];
   }
 
-  const result = await mysql.query(query, params);
+  const result = await mysql.query(query);
 
   return { updated: !!result.changedRows };
 }
