@@ -9,7 +9,7 @@ CREATE TABLE `experiences` (
   `experience` JSON,
   `tags` varchar(1000) DEFAULT NULL,
   `readcount` bigint(10) DEFAULT 0,
-  `ispublished` boolean,
+  `ispublished` boolean NOT NULL DEFAULT 0,
   `publishdate` timestamp DEFAULT NULL, 
   `hidedate` timestamp DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,

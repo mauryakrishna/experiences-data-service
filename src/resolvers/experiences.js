@@ -41,29 +41,39 @@ export const updateExperience = async (_, { input }, context) => {
 export const getExperiences = async (_, __, context) => {
   const query = `
     SELECT * FROM experiences
+    WHERE ispublished = ${true}
     ORDER BY created_at DESC
     LIMIT 20
   `;
 
-  const result = await mysql.query(query, [0]);
+  const result = await mysql.query(query);
 
   return result;
 };
 
-export const getAnExperience = async (_, { input }, context) => { 
-  const { slug } = input;
-  
-  //  extract slugkey from slug
-  const slugkey = slug;
-  
+export const getAnExperience = async (_, { slugkey }, context) => { 
+
   const query = `
     SELECT * FROM experiences
     WHERE slugkey = ? AND ispublished = ?
   `;
 
-  const result = await mysql.query(query, [slugKey, true]);
+  const result = await mysql.query(query, [slugkey, true]);
 
-  return result[0];
+  let experience = result[0];
+
+  const authorid = experience.authorid;
+
+  const authorQuery = `
+    SELECT * FROM authors
+    WHERE id = ?
+  `;
+
+  const author = await mysql.query(authorQuery, [authorid]);
+
+  experience.author = author[0];
+
+  return experience;
 };
 
 export const saveTitle = async (_, { input }, context) => { 

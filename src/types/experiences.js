@@ -3,8 +3,8 @@ import { gql } from 'apollo-server-express';
 const Experiences = gql`
   type Experience {
     id: ID!
-    author: String!
     authorid: Int
+    author: Author
     title: String!
     subtitle: String
     experience: JSONObject!
