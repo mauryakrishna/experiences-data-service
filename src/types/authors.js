@@ -7,7 +7,15 @@ const Authors = gql`
     displayname: String!
     email: String!
     shortintro: String!
+    experiences: [Experience]
   }
 `;
 
-export { Authors };
+const AuthorsInput = gql`
+  input SaveAuthorsInput {
+    displayname: String!
+    email: String!
+    shortintro: String!
+  } 
+`;
+export { Authors, AuthorsInput };

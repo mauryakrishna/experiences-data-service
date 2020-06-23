@@ -11,6 +11,7 @@ const Experiences = gql`
     slug: String
     slugkey: String
     readcount: Int
+    ispublished: Boolean
     publishdate: String
   }
 
