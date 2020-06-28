@@ -12,7 +12,7 @@ const Query = gql`
     examplequery: ExampleType
     getExperiences: [Experience]
     getAnExperience(slugkey: String!): Experience
-    getAuthor(authorid: Int!): Author
+    getAuthor(uid: String!): Author
   }
 `;
 

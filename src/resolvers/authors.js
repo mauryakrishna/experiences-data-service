@@ -2,18 +2,18 @@ import mysql from '../connectors/mysql';
 
 // first 10 and infinit scroll
 // get Authors details along both published experiences and unpublished experiences
-export const getAuthor = async (_, { authorid }, context) => { 
+export const getAuthor = async (_, { uid }, context) => { 
   
   const experiencesQuery = `
     SELECT title, ispublished FROM experiences
-    WHERE authorid = ? 
+    WHERE authoruid = ? 
   `;
 
-  const experiencesResult = await mysql.query(experiencesQuery, [authorid]);
+  const experiencesResult = await mysql.query(experiencesQuery, [uid]);
   
-  const query = `SELECT * FROM authors WHERE id = ?`;
+  const query = `SELECT * FROM authors WHERE uid = ?`;
 
-  const result = await mysql.query(query, [authorid]);
+  const result = await mysql.query(query, [uid]);
 
   const author = result[0];
   author.experiences = experiencesResult;

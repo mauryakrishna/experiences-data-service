@@ -9,6 +9,6 @@ CREATE TABLE `authors` (
   `email` varchar(1000) NOT NULL,
   `shortintro` varchar(1000) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

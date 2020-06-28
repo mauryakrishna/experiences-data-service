@@ -62,14 +62,12 @@ export const getAnExperience = async (_, { slugkey }, context) => {
 
   let experience = result[0];
 
-  const authorid = experience.authorid;
-
   const authorQuery = `
     SELECT * FROM authors
-    WHERE id = ?
+    WHERE uid = ?
   `;
 
-  const author = await mysql.query(authorQuery, [authorid]);
+  const author = await mysql.query(authorQuery, [experience.authoruid]);
 
   experience.author = author[0];
 
