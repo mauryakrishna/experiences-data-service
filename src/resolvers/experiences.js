@@ -11,21 +11,21 @@ const getSlugKey = () => {
 }
 
 export const saveExperience = async (_, { input }, context) => { 
-  const { authorid, experience } = input;
-
+  const { authoruid, experience } = input;
+  
   const query = `
-    INSERT INTO experiences (authorid, experience)
+    INSERT INTO experiences (authoruid, experience)
     VALUES (?, ?);
   `;
 
-  const result = await mysql.query(query, [authorid, JSON.stringify(experience)]);
+  const result = await mysql.query(query, [authoruid, JSON.stringify(experience)]);
 
   return {id: result.insertId};
 }
 
 export const updateExperience = async (_, { input }, context) => {
   const { id, experience } = input;
-
+  
   const query = `
     UPDATE experiences
     SET experience = ?
@@ -47,7 +47,7 @@ export const getExperiences = async (_, __, context) => {
   `;
 
   const result = await mysql.query(query);
-
+  
   return result;
 };
 
@@ -76,17 +76,17 @@ export const getAnExperience = async (_, { slugkey }, context) => {
 
 export const saveTitle = async (_, { input }, context) => { 
 
-  const { authorid, title } = input;
+  const { authoruid, title } = input;
 
   const slug = getSlug(title);
   const slugKey = getSlugKey();
 
   const query = `
-    INSERT INTO experiences (authorid, slugkey, slug, title)
+    INSERT INTO experiences (authoruid, slugkey, slug, title)
     VALUES (?,?,?,?)
   `;
 
-  const result = await mysql.query(query, [authorid, slugKey, slug, title]);
+  const result = await mysql.query(query, [authoruid, slugKey, slug, title]);
 
   return {id: result.insertId};
 }
@@ -108,11 +108,11 @@ export const updateTitle = async (_, { input }, context) => {
 
   // this is when id for experience already exists and then updating title of the experience
   // slugkey did not exists
-  if (slugKeyResult && slugKeyResult.length == 0) {
+  if (slugKeyResult && slugKeyResult.length && !slugKeyResult[0].slugkey) {
     const slugkey = getSlugKey();
     query = `
       UPDATE experiences
-      SET title = ${title}, slug = ${slug}, slugkey = ${slugkey}
+      SET title = '${title}', slug = '${slug}', slugkey = '${slugkey}'
       WHERE id = ${id}
     `;
   }

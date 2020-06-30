@@ -5,7 +5,7 @@ import mysql from '../connectors/mysql';
 export const getAuthor = async (_, { uid }, context) => { 
   
   const experiencesQuery = `
-    SELECT title, ispublished FROM experiences
+    SELECT title, slugkey, ispublished FROM experiences
     WHERE authoruid = ? 
   `;
 
@@ -34,13 +34,13 @@ export const SaveAuthor = async (_, { displayname, email, shortintro }, context)
 }
 
 // kind of update user details
-export const UpdateAuthor = async (_, { displayname, email, shortintro, authorid }, context) => {
+export const UpdateAuthor = async (_, { displayname, email, shortintro, authoruid }, context) => {
   const query = `
     UPDATE authors SET displayname = ?, email = ?, shortintro = ?
     WHERE id = ?
   `;
 
-  const result = await mysql.query(query, [displayname, email, shortintro, authorid]);
+  const result = await mysql.query(query, [displayname, email, shortintro, authoruid]);
 
   return { updated: !!result[0].changedRows };
 }

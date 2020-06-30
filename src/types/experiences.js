@@ -3,7 +3,7 @@ import { gql } from 'apollo-server-express';
 const Experiences = gql`
   type Experience {
     id: ID!
-    authorid: Int
+    authoruid: String!
     author: Author
     title: String!
     subtitle: String
@@ -27,22 +27,22 @@ const Experiences = gql`
 const ExperiencesInput = gql`
 
   input SaveExperienceInput {
-    authorid: Int!
+    authoruid: String!
     experience: JSONObject!
   }
 
   input UpdateExperienceInput {
-    id: Int!
+    id: ID!
     experience: JSONObject!
   }
 
   input SaveTitleInput {
-    authorid: Int!
+    authoruid: String!
     title: String!
   }
 
   input UpdateTitleInput {
-    id: Int!
+    id: ID!
     title: String!
   }
 `;

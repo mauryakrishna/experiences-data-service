@@ -1,7 +1,7 @@
 /* Replace with your SQL commands */
 CREATE TABLE `experiences` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `authoruid` bigint(10) NOT NULL,
+  `authoruid` varchar(100) NOT NULL,
   `slugkey` varchar(15) DEFAULT NULL,
   `slug` varchar(255) DEFAULT NULL,
   `title` varchar(500) DEFAULT NULL,
