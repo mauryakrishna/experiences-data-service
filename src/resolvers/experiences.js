@@ -1,9 +1,38 @@
 import slugify from 'slugify';
+slugify.extend({
+  '>': 'gt',
+  '<': 'lt',
+  '*': 'star',
+  '&': 'amp',
+  '^': 'carat'
+});
 
 import mysql from '../connectors/mysql';
 
-const getSlug = (title) => { 
-  return slugify(title, {lower: true});
+// the below should output a slug string which pass /^[a-z0-9]+(?:-[a-z0-9]+)*$/i
+const getSlug = (title) => {
+  console.log('title', title);
+  let slug = slugify(title, { strict: true, lower: true }); // remove: /[*+~=.()'"`#!:@]/g,
+
+  // no consecutive double dashes
+  slug = slug
+     // replace dobule dash with single
+    .replace(/--/g, '-')
+    // - at end should not be
+    .replace(/-$/g, '')
+
+  console.log('slug', slug);
+  const sluglen = slug.length;
+
+  if (slug && sluglen > 200) {
+    slug = slug.substr(0, 200);
+  }
+  // workaround | should never be the case with strict: true
+  else if(sluglen == 0) { 
+    slug = 'all-special-chars';
+  }
+  
+  return slug; 
 }
 
 const getSlugKey = () => { 
@@ -101,6 +130,7 @@ export const updateTitle = async (_, { input }, context) => {
       SET title = '${title}', slug = '${slug}'
       WHERE id = ${id}
     `;
+  let params = [title, slug, id];
 
   const slugKeyExistsQuery = `SELECT slugkey FROM experiences Where id = ?`;
 
@@ -115,9 +145,10 @@ export const updateTitle = async (_, { input }, context) => {
       SET title = '${title}', slug = '${slug}', slugkey = '${slugkey}'
       WHERE id = ${id}
     `;
+    params = [title, slug, slugkey, id];
   }
 
-  const result = await mysql.query(query);
+  const result = await mysql.query(query, params);
 
   return { updated: !!result.changedRows };
 }

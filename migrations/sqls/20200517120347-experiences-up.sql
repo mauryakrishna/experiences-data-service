@@ -2,9 +2,9 @@
 CREATE TABLE `experiences` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `authoruid` varchar(100) NOT NULL,
-  `slugkey` varchar(15) DEFAULT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `title` varchar(500) DEFAULT NULL,
+  `slugkey` varchar(15) DEFAULT NULL, /* though it is produced and used as 11 charecters*/
+  `slug` varchar(255) DEFAULT NULL,  /* limited to 200 charecters to accomodate in URL with other slugkey */
+  `title` varchar(180) DEFAULT NULL,
   `subtitle` varchar(2000) DEFAULT NULL,
   `experience` JSON,
   `tags` varchar(1000) DEFAULT NULL,
