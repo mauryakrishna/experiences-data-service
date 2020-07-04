@@ -5,7 +5,7 @@ import mysql from '../connectors/mysql';
 export const getAuthor = async (_, { uid }, context) => { 
   
   const experiencesQuery = `
-    SELECT title, slugkey, ispublished FROM experiences
+    SELECT title, slug, slugkey, ispublished FROM experiences
     WHERE authoruid = ? 
   `;
 
