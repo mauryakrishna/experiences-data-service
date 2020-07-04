@@ -9,13 +9,27 @@ const Authors = gql`
     shortintro: String!
     experiences: [Experience]
   }
+
+  type SaveAuthorResponse {
+    authoruid: String!
+  }
+
+  type UpdateAuthorResponse {
+    updated: Boolean!
+  }
 `;
 
 const AuthorsInput = gql`
-  input SaveAuthorsInput {
+  input SaveAuthorInput {
     displayname: String!
     email: String!
     shortintro: String!
   } 
+  input UpdateAuthorInput {
+    authoruid: String!
+    displayname: String!
+    shortintro: String!
+  }
 `;
+
 export { Authors, AuthorsInput };

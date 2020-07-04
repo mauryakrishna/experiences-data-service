@@ -3,7 +3,7 @@ import { makeExecutableSchema, gql } from 'apollo-server-express';
 import {
   exampleupdate, examplequery,
   saveExperience, updateExperience, getExperiences, getAnExperience, saveTitle, updateTitle,
-  getAuthor
+  getAuthor, saveAuthor, updateAuthor
 } from './resolvers';
 import types from './types';
 
@@ -23,6 +23,8 @@ const Mutation = gql`
     updateExperience(input: UpdateExperienceInput): UpdateExperienceResponse
     saveTitle(input: SaveTitleInput): SaveExperienceResponse
     updateTitle(input: UpdateTitleInput): UpdateExperienceResponse
+    saveAuthor(input: SaveAuthorInput): SaveAuthorResponse
+    updateAuthor(input: UpdateAuthorInput): UpdateAuthorResponse
   }
 `;
 
@@ -40,7 +42,9 @@ const resolvers = {
     saveExperience,
     updateExperience,
     saveTitle,
-    updateTitle
+    updateTitle,
+    saveAuthor,
+    updateAuthor
   }
 };
 

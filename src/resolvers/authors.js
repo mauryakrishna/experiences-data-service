@@ -22,25 +22,27 @@ export const getAuthor = async (_, { uid }, context) => {
 };
 
 // kind of register user
-export const SaveAuthor = async (_, { displayname, email, shortintro }, context) => { 
+export const saveAuthor = async (_, { displayname, email, shortintro, authoruid }, context) => { 
   const query = `
-    INSERT INTO authors (displayname, email, shortintro)
-    VALUES (?, ?, ?)
+    INSERT INTO authors (displayname, email, shortintro, authoruid)
+    VALUES (?, ?, ?, ?)
   `;
 
-  const result = await mysql.query(query, [displayname, email, shortintro]);
+  const result = await mysql.query(query, [displayname, email, shortintro, authoruid]);
 
   return { id: result[0].insertId };
 }
 
 // kind of update user details
-export const UpdateAuthor = async (_, { displayname, email, shortintro, authoruid }, context) => {
+export const updateAuthor = async (_, { input }, context) => {
+
+  const { displayname, shortintro, authoruid } = input;
   const query = `
-    UPDATE authors SET displayname = ?, email = ?, shortintro = ?
-    WHERE id = ?
+    UPDATE authors SET displayname = ?, shortintro = ?
+    WHERE uid = ?
   `;
 
-  const result = await mysql.query(query, [displayname, email, shortintro, authoruid]);
+  const result = await mysql.query(query, [displayname, shortintro, authoruid]);
 
-  return { updated: !!result[0].changedRows };
+  return { updated: !!result.affectedRows };
 }

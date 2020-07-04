@@ -6,8 +6,8 @@ CREATE TABLE `authors` (
   -- uid: used for mention and author profile url loading
   `uid` varchar(100) NOT NULL,
   `displayname` varchar(100) NOT NULL,
-  `email` varchar(1000) NOT NULL,
-  `shortintro` varchar(1000) DEFAULT NULL,
+  `email` varchar(50) NOT NULL,
+  `shortintro` varchar(500) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`uid`)
