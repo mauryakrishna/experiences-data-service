@@ -21,9 +21,11 @@ const Mutation = gql`
     exampleupdate: ExampleType
     saveExperience(input: SaveExperienceInput): SaveExperienceResponse
     updateExperience(input: UpdateExperienceInput): UpdateExperienceResponse
-    publishExperience(input: PublishExperienceInput): PublishExperience
-    saveTitle(input: SaveTitleInput): SaveExperienceResponse
-    updateTitle(input: UpdateTitleInput): UpdateExperienceResponse
+    publishExperience(input: PublishExperienceInput): PublishExperienceResponse
+
+    saveTitle(input: SaveTitleInput): SaveTitleResponse
+    updateTitle(input: UpdateTitleInput): UpdateTitleResponse
+
     saveAuthor(input: SaveAuthorInput): SaveAuthorResponse
     updateAuthor(input: UpdateAuthorInput): UpdateAuthorResponse
   }

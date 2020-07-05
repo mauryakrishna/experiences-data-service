@@ -15,15 +15,29 @@ const Experiences = gql`
     publishdate: String
   }
 
-  type SaveExperienceResponse {
-    id: Int!
+  type SaveTitleResponse {
+    title: String!
+    id: ID!
   }
 
-  type UpdateExperienceResponse {
+  type UpdateTitleResponse {
+    title: String!
     updated: Boolean!
   }
 
-  type PublishExperience {
+  type SaveExperienceResponse {
+    experience: JSONObject!
+    id: ID!
+  }
+
+  type UpdateExperienceResponse {
+    experience: JSONObject!
+    updated: Boolean!
+  }
+
+  type PublishExperienceResponse {
+    slug: String!
+    slugkey: String!
     published: Boolean!
   }
 `;
@@ -51,7 +65,7 @@ const ExperiencesInput = gql`
   }
 
   input PublishExperienceInput {
-    slugkey: String!
+    id: ID!
     authoruid: String!
   }
 `;

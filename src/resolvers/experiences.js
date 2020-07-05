@@ -49,7 +49,7 @@ export const saveExperience = async (_, { input }, context) => {
 
   const result = await mysql.query(query, [authoruid, JSON.stringify(experience)]);
 
-  return {id: result.insertId};
+  return {id: result.insertId, experience};
 }
 
 export const updateExperience = async (_, { input }, context) => {
@@ -63,7 +63,7 @@ export const updateExperience = async (_, { input }, context) => {
 
   const result = await mysql.query(query, [JSON.stringify(experience), id]);
 
-  return { updated: !!result.changedRows };
+  return { updated: !!result.changedRows, experience };
 };
 
 // for first 20 experience loading and infinite scroll
@@ -117,7 +117,7 @@ export const saveTitle = async (_, { input }, context) => {
 
   const result = await mysql.query(query, [authoruid, slugKey, slug, title]);
 
-  return {id: result.insertId};
+  return {id: result.insertId, title};
 }
 
 export const updateTitle = async (_, { input }, context) => { 
@@ -150,19 +150,19 @@ export const updateTitle = async (_, { input }, context) => {
 
   const result = await mysql.query(query, params);
 
-  return { updated: !!result.changedRows };
+  return { updated: !!result.changedRows, title };
 }
 
 export const publishExperience = async (_, { input }, context) => {
-  const { slugkey, authoruid } = input;
+  const { id, authoruid } = input;
 
   const query = `
     UPDATE experiences 
     SET publishdate = (SELECT NOW()), ispublished=${true}
-    WHERE slugkey = ? AND authoruid = ?
+    WHERE id = ? AND authoruid = ?
   `;
 
-  const result = await mysql.query(query, [slugkey, authoruid]);
+  const result = await mysql.query(query, [id, authoruid]);
   
   return { published: !!result.affectedRows };
 }
