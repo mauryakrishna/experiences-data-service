@@ -22,6 +22,10 @@ const Experiences = gql`
   type UpdateExperienceResponse {
     updated: Boolean!
   }
+
+  type PublishExperience {
+    published: Boolean!
+  }
 `;
 
 const ExperiencesInput = gql`
@@ -44,6 +48,11 @@ const ExperiencesInput = gql`
   input UpdateTitleInput {
     id: ID!
     title: String!
+  }
+
+  input PublishExperienceInput {
+    slugkey: String!
+    authoruid: String!
   }
 `;
 

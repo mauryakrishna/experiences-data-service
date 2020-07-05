@@ -31,7 +31,7 @@ const getSlug = (title) => {
   else if(sluglen == 0) { 
     slug = 'all-special-chars';
   }
-  
+
   return slug; 
 }
 
@@ -71,7 +71,7 @@ export const getExperiences = async (_, __, context) => {
   const query = `
     SELECT * FROM experiences
     WHERE ispublished = ${true}
-    ORDER BY created_at DESC
+    ORDER BY publishdate DESC
     LIMIT 20
   `;
 
@@ -151,4 +151,18 @@ export const updateTitle = async (_, { input }, context) => {
   const result = await mysql.query(query, params);
 
   return { updated: !!result.changedRows };
+}
+
+export const publishExperience = async (_, { input }, context) => {
+  const { slugkey, authoruid } = input;
+
+  const query = `
+    UPDATE experiences 
+    SET publishdate = (SELECT NOW()), ispublished=${true}
+    WHERE slugkey = ? AND authoruid = ?
+  `;
+
+  const result = await mysql.query(query, [slugkey, authoruid]);
+  
+  return { published: !!result.affectedRows };
 }
