@@ -68,6 +68,13 @@ const ExperiencesInput = gql`
     id: ID!
     authoruid: String!
   }
+
+  input SaveNPublishExperienceInput {
+    id: ID!
+    title: String!
+    experience: JSONObject!
+    authoruid: String!
+  }
 `;
 
 export { Experiences, ExperiencesInput };

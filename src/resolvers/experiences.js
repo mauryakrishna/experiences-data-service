@@ -166,3 +166,17 @@ export const publishExperience = async (_, { input }, context) => {
   
   return { published: !!result.affectedRows };
 }
+
+export const saveNPublishExperience = async (_, { input }, context) => {
+  const { id, title, experience, authoruid } = input;
+
+  const query = `
+    UPDATE experiences
+    SET title = ?, experience = ?
+    WHERE id = ? and authoruid = ?
+  `;
+
+  const result = await mysql.query(query, [title, JSON.stringify(experience), id, authoruid]);
+
+  return { savenpublished: !!result.affectedRows };
+};
