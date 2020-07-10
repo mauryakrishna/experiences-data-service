@@ -162,9 +162,19 @@ export const publishExperience = async (_, { input }, context) => {
     WHERE id = ? AND authoruid = ?
   `;
 
-  const result = await mysql.query(query, [id, authoruid]);
-  
-  return { published: !!result.affectedRows };
+  await mysql.query(query, [id, authoruid]);
+
+  const query1 = `
+    SELECT slug, slugkey, ispublished
+    FROM experiences
+    WHERE id = ?
+  `;
+
+  const result1 = await mysql.query(query1, [id]);
+
+  const { slug, slugkey, ispublished } = result1[0];
+
+  return { published: ispublished, slug, slugkey };
 }
 
 export const saveNPublishExperience = async (_, { input }, context) => {
