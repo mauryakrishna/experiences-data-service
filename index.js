@@ -2,7 +2,9 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
+import { applyMiddleware } from 'graphql-middleware';
 
+import middlewares from './src/middlewares/index';
 const app = express();
 
 if (process.env.NODE_ENV == 'development') { 
@@ -21,8 +23,10 @@ const requestlogging = {
   }
 }
 
+const schemaWithMiddleware = applyMiddleware(schema, ...middlewares);
+
 const server = new ApolloServer({
-  schema,
+  schema: schemaWithMiddleware,
   plugins: [],//requestlogging
   onHealthCheck: () => {
     return new Promise((resolve, reject) => {
