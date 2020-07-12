@@ -1,4 +1,3 @@
-
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
