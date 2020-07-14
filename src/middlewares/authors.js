@@ -16,7 +16,6 @@ const authorsMiddleware = {
     getAuthor: async (resolve, parent, args, context, info) => { 
       const result = await resolve(parent, args, context, info);
       result.experiences = appendUntitled(result.experiences);
-      console.log(result);
       return result;
     }
   }

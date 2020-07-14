@@ -17,27 +17,18 @@ const Experiences = gql`
 
   type SaveTitleResponse {
     title: String!
-    id: ID!
-  }
-
-  type UpdateTitleResponse {
-    title: String!
-    updated: Boolean!
+    slugkey: String!
+    saved: Boolean!
   }
 
   type SaveExperienceResponse {
     experience: JSONObject!
-    id: ID!
-  }
-
-  type UpdateExperienceResponse {
-    experience: JSONObject!
-    updated: Boolean!
+    slugkey: String!
+    authoruid: String!
   }
 
   type PublishExperienceResponse {
     slug: String!
-    slugkey: String!
     published: Boolean!
   }
 `;
@@ -46,31 +37,23 @@ const ExperiencesInput = gql`
 
   input SaveExperienceInput {
     authoruid: String!
-    experience: JSONObject!
-  }
-
-  input UpdateExperienceInput {
-    id: ID!
+    slugkey: String
     experience: JSONObject!
   }
 
   input SaveTitleInput {
     authoruid: String!
-    title: String!
-  }
-
-  input UpdateTitleInput {
-    id: ID!
+    slugkey: String
     title: String!
   }
 
   input PublishExperienceInput {
-    id: ID!
+    slugkey: String
     authoruid: String!
   }
 
   input SaveNPublishExperienceInput {
-    id: ID!
+    slugkey: String
     title: String!
     experience: JSONObject!
     authoruid: String!
