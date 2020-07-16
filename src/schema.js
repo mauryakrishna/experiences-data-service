@@ -2,7 +2,7 @@
 import { makeExecutableSchema, gql } from 'apollo-server-express';
 import {
   exampleupdate, examplequery,
-  saveExperience, getExperiences, getAnExperience, saveTitle, publishExperience,
+  saveExperience, getExperiences, getAnExperienceForRead, getAnExperienceForEdit, saveTitle, publishExperience,
   saveNPublishExperience,
   getAuthor, saveAuthor, updateAuthor
 } from './resolvers';
@@ -12,7 +12,8 @@ const Query = gql`
   type Query {
     examplequery: ExampleType
     getExperiences: [Experience]
-    getAnExperience(slugkey: String!): Experience
+    getAnExperienceForRead(slugkey: String!): Experience
+    getAnExperienceForEdit(slugkey: String): EditExperience
     getAuthor(uid: String!): Author
   }
 `;
@@ -37,7 +38,8 @@ const resolvers = {
   Query: {
     examplequery,
     getExperiences,
-    getAnExperience,
+    getAnExperienceForRead,
+    getAnExperienceForEdit,
     getAuthor
   },
   Mutation: {

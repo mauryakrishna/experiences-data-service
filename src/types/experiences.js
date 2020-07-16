@@ -2,7 +2,6 @@ import { gql } from 'apollo-server-express';
 
 const Experiences = gql`
   type Experience {
-    id: ID!
     authoruid: String!
     author: Author
     title: String!
@@ -21,14 +20,21 @@ const Experiences = gql`
     saved: Boolean!
   }
 
+  type EditExperience {
+    title: String
+    experience: JSONObject
+    ispublished: Boolean
+  }
+
   type SaveExperienceResponse {
     experience: JSONObject!
     slugkey: String!
-    authoruid: String!
+    saved: Boolean!
   }
 
   type PublishExperienceResponse {
-    slug: String!
+    slug: String
+    slugkey: String
     published: Boolean!
   }
 `;
