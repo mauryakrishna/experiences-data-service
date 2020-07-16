@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV == 'development') { 
+  require('env2')('./devenv.json');
+}
+
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
@@ -6,10 +10,7 @@ import { applyMiddleware } from 'graphql-middleware';
 import middlewares from './src/middlewares/index';
 const app = express();
 
-if (process.env.NODE_ENV == 'development') { 
-  require('env2')('./devenv.json');
-}
-
+console.log('');
 // using console for logging
 global.logger = console;
 

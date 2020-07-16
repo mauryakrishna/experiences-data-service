@@ -1,5 +1,15 @@
 import util from 'util';
-import mysql from 'mysql';
+import mysql from 'mysql2';
+
+/**
+ * The below env variable check is to avoid the timewasting may happen because of DB
+ * connection refuse.
+ */ 
+const { MYSQL_USER, MYSQL_HOST } = process.env;
+
+if (!MYSQL_HOST || !MYSQL_USER) { 
+  throw Error('DB ENV variables are not loading.');
+}
 
 const mysqlconfig = {
   host: process.env.MYSQL_HOST,
@@ -10,10 +20,15 @@ const mysqlconfig = {
   connectionLimit: process.env.MYSQL_CONNECTION_LIMIT
 };
 
-// Workaround just to avoid solving into error of logger not define
-const logger = console.log;
-
 const conn = mysql.createConnection(mysqlconfig);
+
+conn.connect(function(err) {
+  if (err) {
+    console.error('Error connecting: ' + err);
+    return;
+  }
+  console.log(`Connection established, thead id ${conn.threadId}.`);
+});
 
 const query = util.promisify(conn.query).bind(conn);
 

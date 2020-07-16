@@ -1,69 +1,65 @@
-import slugify from 'slugify';
-slugify.extend({
-  '>': 'gt',
-  '<': 'lt',
-  '*': 'star',
-  '&': 'amp',
-  '^': 'carat'
-});
-
 import mysql from '../connectors/mysql';
 
-// the below should output a slug string which pass /^[a-z0-9]+(?:-[a-z0-9]+)*$/i
-const getSlug = (title) => {
-  console.log('title', title);
-  let slug = slugify(title, { strict: true, lower: true }); // remove: /[*+~=.()'"`#!:@]/g,
+import { getSlug, getSlugKey } from '../utils/experiences';
 
-  // no consecutive double dashes
-  slug = slug
-     // replace dobule dash with single
-    .replace(/--/g, '-')
-    // - at end should not be
-    .replace(/-$/g, '')
-
-  console.log('slug', slug);
-  const sluglen = slug.length;
-
-  if (slug && sluglen > 200) {
-    slug = slug.substr(0, 200);
-  }
-  // workaround | should never be the case with strict: true
-  else if(sluglen == 0) { 
-    slug = 'all-special-chars';
-  }
-
-  return slug; 
-}
-
-const getSlugKey = () => { 
-  return Math.random().toString(36).slice(2);
-}
-
-export const saveExperience = async (_, { input }, context) => { 
-  const { authoruid, experience } = input;
+const createARowWithSlugKey = async (authoruid) => { 
+  
+  const slugkey = getSlugKey();
   
   const query = `
-    INSERT INTO experiences (authoruid, experience)
-    VALUES (?, ?);
+    INSERT INTO experiences (slugkey, authoruid)
+    VALUES (?,?)
   `;
+  try {
+    await mysql.query(query, [slugkey, authoruid]);
+    return slugkey;
+  }
+  catch (error) { 
+    throw Error('Error inserting a record.');
+  }
+  
+};
 
-  const result = await mysql.query(query, [authoruid, JSON.stringify(experience)]);
+export const saveTitle = async (_, { input }, context) => { 
+  const { title, authoruid } = input;
 
-  return {id: result.insertId, experience};
+  const slug = getSlug(title);
+  
+  let slugkey = input.slugkey;
+  // no slugkey means new record
+  if (!slugkey) { 
+    slugkey = await createARowWithSlugKey(authoruid);
+  }
+
+  let query = `
+      UPDATE experiences
+      SET title = ?, slug = ?
+      WHERE slugkey =? and authoruid = ?
+    `;
+
+  const result = await mysql.query(query, [title, slug, slugkey, authoruid]);
+  
+  return { saved: !!(result && result.affectedRows), title, slugkey };
 }
 
-export const updateExperience = async (_, { input }, context) => {
-  const { id, experience } = input;
-  
+export const saveExperience = async (_, { input }, context) => {
+  const { authoruid, experience } = input;
+  console.log('->', input);
+  let slugkey = input.slugkey;
+  // no slugkey means new record
+  if (!slugkey) { 
+    slugkey = await createARowWithSlugKey(authoruid);
+  }
+
   const query = `
     UPDATE experiences
     SET experience = ?
-    WHERE id = ?
+    WHERE slugkey = ? and authoruid = ?
   `;
 
-  const result = await mysql.query(query, [JSON.stringify(experience), id]);
+  const result = await mysql.query(query, [JSON.stringify(experience), slugkey, authoruid]);
 
-  return { updated: !!result.changedRows, experience };
+  return { saved: !!(result && result.affectedRows), experience, slugkey };
 };
 
 // for first 20 experience loading and infinite scroll
@@ -77,126 +73,123 @@ export const getExperiences = async (_, __, context) => {
 
   const result = await mysql.query(query);
   
-  return result;
+  return result || [];
 };
 
-export const getAnExperience = async (_, { slugkey }, context) => { 
-
+export const getAnExperienceForRead = async (_, { slugkey }, context) => { 
   const query = `
     SELECT * FROM experiences
     WHERE slugkey = ? AND ispublished = ?
   `;
-
   const result = await mysql.query(query, [slugkey, true]);
 
   let experience = result[0];
+  if (!experience) { 
+    console.log(`Could not find experience for ${slugkey}`);
+    return {};
+  }
 
   const authorQuery = `
-    SELECT * FROM authors
-    WHERE uid = ?
-  `;
-
+      SELECT uid, displayname, shortintro FROM authors
+      WHERE uid = ?
+    `;
   const author = await mysql.query(authorQuery, [experience.authoruid]);
+  
+  if (!(author && author.length > 0)) { 
+    console.log(`Could not find author for ${experience.authoruid} with experience slugkey ${slugkey}.`);
+    return {};
+  }
 
   experience.author = author[0];
 
   return experience;
 };
 
-export const saveTitle = async (_, { input }, context) => { 
-
-  const { authoruid, title } = input;
-
-  const slug = getSlug(title);
-  const slugKey = getSlugKey();
-
+export const getAnExperienceForEdit = async (_, { slugkey }, context) => {
   const query = `
-    INSERT INTO experiences (authoruid, slugkey, slug, title)
-    VALUES (?,?,?,?)
+    SELECT title, experience, ispublished 
+    FROM experiences
+    WHERE slugkey = ?
   `;
-
-  const result = await mysql.query(query, [authoruid, slugKey, slug, title]);
-
-  return {id: result.insertId, title};
-}
-
-export const updateTitle = async (_, { input }, context) => { 
-  const { id, title } = input;
-
-  const slug = getSlug(title);
-  
-  let query = `
-      UPDATE experiences
-      SET title = '${title}', slug = '${slug}'
-      WHERE id = ${id}
-    `;
-  let params = [title, slug, id];
-
-  const slugKeyExistsQuery = `SELECT slugkey FROM experiences Where id = ?`;
-
-  const slugKeyResult = await mysql.query(slugKeyExistsQuery, [id]);
-
-  // this is when id for experience already exists and then updating title of the experience
-  // slugkey did not exists
-  if (slugKeyResult && slugKeyResult.length && !slugKeyResult[0].slugkey) {
-    const slugkey = getSlugKey();
-    query = `
-      UPDATE experiences
-      SET title = '${title}', slug = '${slug}', slugkey = '${slugkey}'
-      WHERE id = ${id}
-    `;
-    params = [title, slug, slugkey, id];
+  try {
+    const result = await mysql.query(query, [slugkey]);
+    
+    if (result && result.length > 0) {
+      const { title, experience, ispublished } = result[0];
+      return { title, experience, ispublished };
+    }
+    else {
+      console.log(`Could not get exp for edit ${slugkey}.`);
+      return {};
+    }
   }
-
-  const result = await mysql.query(query, params);
-
-  return { updated: !!result.changedRows, title };
-}
+  catch (err) { 
+    throw Error(err);
+  }
+};
 
 export const publishExperience = async (_, { input }, context) => {
-  const { id, authoruid } = input;
+  const { slugkey, authoruid } = input;
 
   const query = `
     UPDATE experiences 
     SET publishdate = (SELECT NOW()), ispublished=${true}
-    WHERE id = ? AND authoruid = ?
+    WHERE slugkey = ? AND authoruid = ?
   `;
 
-  await mysql.query(query, [id, authoruid]);
+  const result = await mysql.query(query, [slugkey, authoruid]);
+
+  if (!(result && result.affectedRows > 0)) { 
+    console.log(`Could not publish experience for slugkey ${slugkey} and author ${authoruid}.`);
+    return { published: false };
+  }
 
   const query1 = `
-    SELECT slug, slugkey, ispublished
+    SELECT slug, ispublished
     FROM experiences
-    WHERE id = ?
+    WHERE slugkey = ?
   `;
 
-  const result1 = await mysql.query(query1, [id]);
+  const result1 = await mysql.query(query1, [slugkey]);
 
-  const { slug, slugkey, ispublished } = result1[0];
+  if (!(result1 && result1.length > 0)) { 
+    console.log(`Could not get the published experience for slugkey ${slugkey}.`);
+    return { published: false };
+  }
+  const { slug, ispublished } = result1[0];
 
   return { published: ispublished, slug, slugkey };
 }
 
 export const saveNPublishExperience = async (_, { input }, context) => {
-  const { id, title, experience, authoruid } = input;
+  const { slugkey, title, experience, authoruid } = input;
 
   const query = `
     UPDATE experiences
     SET title = ?, experience = ?
-    WHERE id = ? and authoruid = ?
+    WHERE slugkey = ? and authoruid = ?
   `;
 
-  await mysql.query(query, [title, JSON.stringify(experience), id, authoruid]);
+  const result = await mysql.query(query, [title, JSON.stringify(experience), slugkey, authoruid]);
+
+  if (!(result && result.affectedRows > 0)) { 
+    console.log(`Could not SaveNPublish for ${slugkey}.`);
+    return { published: false };
+  }
 
   const query1 = `
     SELECT slug, slugkey, ispublished
     FROM experiences
-    WHERE id = ? 
+    WHERE slugkey = ? 
   `;
 
-  const result1 = await mysql.query(query1, [id]);
-  
-  const { slug, slugkey, ispublished } = result1[0];
+  const result1 = await mysql.query(query1, [slugkey]);
+  if (!(result && result1.length > 0)) { 
+    console.log(`Could not get SaveNPublished experience for ${slugkey}.`);
+    return { published: false };
+  }  
+
+  const { slug, ispublished } = result1[0];
 
   return { published: ispublished, slug, slugkey };
 };
