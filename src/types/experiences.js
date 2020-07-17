@@ -14,6 +14,10 @@ const Experiences = gql`
     publishdate: String
   }
 
+  type GetExperiencesResponse {
+    cursor: String!
+    experiences: [Experience!] 
+  }
   type SaveTitleResponse {
     title: String!
     slugkey: String!

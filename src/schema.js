@@ -11,7 +11,7 @@ import types from './types';
 const Query = gql`
   type Query {
     examplequery: ExampleType
-    getExperiences: [Experience]
+    getExperiences(cursor: String, experienceperpage: Int!): GetExperiencesResponse
     getAnExperienceForRead(slugkey: String!): Experience
     getAnExperienceForEdit(slugkey: String): EditExperience
     getAuthor(uid: String!): Author

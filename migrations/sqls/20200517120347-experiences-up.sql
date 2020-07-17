@@ -10,7 +10,7 @@ CREATE TABLE `experiences` (
   `tags` varchar(1000) DEFAULT NULL,
   `readcount` bigint(10) DEFAULT 0,
   `ispublished` boolean NOT NULL DEFAULT 0,
-  `publishdate` timestamp DEFAULT NULL, 
+  `publishdate` timestamp(6) DEFAULT NULL,  /* used timestamp of precision 6 as this will be used in cursor based pagination */
   `hidedate` timestamp DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,

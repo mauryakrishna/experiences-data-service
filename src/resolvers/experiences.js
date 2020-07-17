@@ -1,5 +1,6 @@
+import moment from 'moment';
 import mysql from '../connectors/mysql';
-
+import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
 import { getSlug, getSlugKey } from '../utils/experiences';
 
 const createARowWithSlugKey = async (authoruid) => { 
@@ -44,7 +45,7 @@ export const saveTitle = async (_, { input }, context) => {
 
 export const saveExperience = async (_, { input }, context) => {
   const { authoruid, experience } = input;
-  console.log('->', input);
+  
   let slugkey = input.slugkey;
   // no slugkey means new record
   if (!slugkey) { 
@@ -62,20 +63,29 @@ export const saveExperience = async (_, { input }, context) => {
   return { saved: !!(result && result.affectedRows), experience, slugkey };
 };
 
-// for first 20 experience loading and infinite scroll
-export const getExperiences = async (_, __, context) => {
+// for first 10 experience, load the list for home page
+export const getExperiences = async (_, { cursor, experienceperpage }, context) => {
+  cursor = cursor || moment().format(EXPERIENCE_PUBLISHDATE_FORMAT);
+  experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
+
   const query = `
     SELECT * FROM experiences
-    WHERE ispublished = ${true}
+    WHERE ispublished = ${true} AND publishdate < ?
     ORDER BY publishdate DESC
-    LIMIT 20
+    LIMIT ?
   `;
 
-  const result = await mysql.query(query);
+  const result = await mysql.query(query, [cursor, experienceperpage]);
   
-  return result || [];
+  const len = result.length;
+  if (len > 0) { 
+    cursor = moment(result[len - 1].publishdate).format(EXPERIENCE_PUBLISHDATE_FORMAT);
+  }
+
+  return { cursor, experiences: result || [] };
 };
 
+// single read
 export const getAnExperienceForRead = async (_, { slugkey }, context) => { 
   const query = `
     SELECT * FROM experiences
@@ -105,6 +115,7 @@ export const getAnExperienceForRead = async (_, { slugkey }, context) => {
   return experience;
 };
 
+// single edit
 export const getAnExperienceForEdit = async (_, { slugkey }, context) => {
   const query = `
     SELECT title, experience, ispublished 
@@ -133,7 +144,7 @@ export const publishExperience = async (_, { input }, context) => {
 
   const query = `
     UPDATE experiences 
-    SET publishdate = (SELECT NOW()), ispublished=${true}
+    SET publishdate = (SELECT NOW(6)), ispublished=${true}
     WHERE slugkey = ? AND authoruid = ?
   `;
 
