@@ -10,7 +10,6 @@ import { applyMiddleware } from 'graphql-middleware';
 import middlewares from './src/middlewares/index';
 const app = express();
 
-console.log('');
 // using console for logging
 global.logger = console;
 

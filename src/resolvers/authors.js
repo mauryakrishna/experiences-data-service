@@ -12,8 +12,6 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
   experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
   itsme = itsme || true;
 
-  console.log('in:cursor', cursor);
-
   const experiencesQuery = `
     SELECT title, slug, slugkey, ispublished, updated_at
     FROM experiences
@@ -31,7 +29,6 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
     cursor = moment(experiencesResult[len - 1].updated_at).format(EXPERIENCE_PUBLISHDATE_FORMAT);
   }
 
-  console.log('out:cursor', cursor);
   const query = `SELECT * FROM authors WHERE uid = ?`;
 
   const result = await mysql.query(query, [uid]);
