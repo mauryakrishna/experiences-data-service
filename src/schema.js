@@ -14,7 +14,7 @@ const Query = gql`
     getExperiences(cursor: String, experienceperpage: Int!): GetExperiencesResponse
     getAnExperienceForRead(slugkey: String!): Experience
     getAnExperienceForEdit(slugkey: String): EditExperience
-    getAuthor(uid: String!): Author
+    getAuthor(cursor: String, experienceperpage: Int!, uid: String!): GetAuthorResponse
   }
 `;
 

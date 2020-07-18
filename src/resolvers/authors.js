@@ -1,16 +1,37 @@
+import moment from 'moment';
 import mysql from '../connectors/mysql';
+import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
 
 // first 10 and infinit scroll
 // get Authors details along both published experiences and unpublished experiences
-export const getAuthor = async (_, { uid }, context) => { 
+// itsme: true - when author himself visit the page 
+// need to know if its authors own or is visitng different author page, difference would be not showing experiences in draft 
+export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, context) => { 
   
+  cursor = cursor || moment().format(EXPERIENCE_PUBLISHDATE_FORMAT);
+  experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
+  itsme = itsme || true;
+
+  console.log('in:cursor', cursor);
+
   const experiencesQuery = `
-    SELECT title, slug, slugkey, ispublished FROM experiences
-    WHERE authoruid = ? 
+    SELECT title, slug, slugkey, ispublished, updated_at
+    FROM experiences
+    WHERE authoruid = ? AND updated_at < ?
+    ${(itsme ? '': 'AND ispublished=true')} 
+    ORDER BY updated_at DESC
+    LIMIT ?
   `;
 
-  const experiencesResult = await mysql.query(experiencesQuery, [uid]);
+  const experiencesResult = await mysql.query(experiencesQuery, [uid, cursor, experienceperpage]);
   
+  const len = experiencesResult.length;
+  
+  if (len > 0) { 
+    cursor = moment(experiencesResult[len - 1].updated_at).format(EXPERIENCE_PUBLISHDATE_FORMAT);
+  }
+
+  console.log('out:cursor', cursor);
   const query = `SELECT * FROM authors WHERE uid = ?`;
 
   const result = await mysql.query(query, [uid]);
@@ -18,7 +39,7 @@ export const getAuthor = async (_, { uid }, context) => {
   const author = result[0];
   author.experiences = experiencesResult;
 
-  return author;
+  return { cursor, author };
 };
 
 // kind of register user

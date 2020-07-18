@@ -10,6 +10,11 @@ const Authors = gql`
     experiences: [Experience]
   }
 
+  type GetAuthorResponse {
+    cursor: String!
+    author: Author!
+  }
+
   type SaveAuthorResponse {
     authoruid: String!
   }
