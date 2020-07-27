@@ -3,20 +3,25 @@ import { gql } from 'apollo-server-express';
 const Authors = gql`
   type Author {
     uid: String!
-    authorid: Int!
     displayname: String!
     email: String!
     shortintro: String!
     experiences: [Experience]
   }
 
+  type AuthorBioResponse {
+    displayname: String
+    authoruid: String
+  }
+  
   type GetAuthorResponse {
     cursor: String!
     author: Author!
   }
 
-  type SaveAuthorResponse {
-    authoruid: String!
+  type SignAuthorResponse {
+    exist: Boolean!
+    author: AuthorBioResponse
   }
 
   type UpdateAuthorResponse {
@@ -25,11 +30,16 @@ const Authors = gql`
 `;
 
 const AuthorsInput = gql`
-  input SaveAuthorInput {
+  input SigninAuthorInput {
+    email: String!
+  }
+
+  input SignupAuthorInput {
     displayname: String!
     email: String!
-    shortintro: String!
+    facebookid: Int
   } 
+
   input UpdateAuthorInput {
     authoruid: String!
     displayname: String!

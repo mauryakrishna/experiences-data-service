@@ -4,7 +4,7 @@ import {
   exampleupdate, examplequery,
   saveExperience, getExperiences, getAnExperienceForRead, getAnExperienceForEdit, saveTitle, publishExperience,
   saveNPublishExperience,
-  getAuthor, saveAuthor, updateAuthor
+  getAuthor, signupAuthor, signinAuthor, updateAuthor
 } from './resolvers';
 import types from './types';
 
@@ -15,6 +15,7 @@ const Query = gql`
     getAnExperienceForRead(slugkey: String!): Experience
     getAnExperienceForEdit(slugkey: String): EditExperience
     getAuthor(cursor: String, experienceperpage: Int!, uid: String!): GetAuthorResponse
+    signinAuthor(email: String!): SignAuthorResponse
   }
 `;
 
@@ -27,7 +28,7 @@ const Mutation = gql`
 
     saveTitle(input: SaveTitleInput): SaveTitleResponse
 
-    saveAuthor(input: SaveAuthorInput): SaveAuthorResponse
+    signupAuthor(input: SignupAuthorInput): SignAuthorResponse
     updateAuthor(input: UpdateAuthorInput): UpdateAuthorResponse
   }
 `;
@@ -40,7 +41,8 @@ const resolvers = {
     getExperiences,
     getAnExperienceForRead,
     getAnExperienceForEdit,
-    getAuthor
+    getAuthor,
+    signinAuthor
   },
   Mutation: {
     exampleupdate,
@@ -48,7 +50,7 @@ const resolvers = {
     publishExperience,
     saveNPublishExperience,
     saveTitle,
-    saveAuthor,
+    signupAuthor,
     updateAuthor
   }
 };

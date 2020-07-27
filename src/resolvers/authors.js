@@ -39,16 +39,72 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
   return { cursor, author };
 };
 
-// kind of register user
-export const saveAuthor = async (_, { displayname, email, shortintro, authoruid }, context) => { 
+const getUniqueUid = async (username) => { 
+
   const query = `
-    INSERT INTO authors (displayname, email, shortintro, authoruid)
-    VALUES (?, ?, ?, ?)
+    SELECT uid FROM authors
+    WHERE uid like '${username}%'
   `;
 
-  const result = await mysql.query(query, [displayname, email, shortintro, authoruid]);
+  const result = await mysql.query(query);
 
-  return { id: result[0].insertId };
+  let uid = username;
+
+  if (result.includes(username)) {
+    // if found means uid duplicate, so generate unique
+    do { 
+      let randomNumber = Math.floor(Math.random(4) * 1000); // 3 digit 
+      let newusername = `${username}${randomNumber}`;
+    }
+    while (result.includes(newusername) !== false)
+    
+    uid = newusername;
+  }
+  
+  return uid;
+}
+
+const getExisitingAuthor = async (email) => { 
+  const query = `SELECT * FROM authors WHERE email = ?`;
+
+  const result = await mysql.query(query, [email]);
+  
+  return {exist: !!result.length, author: result[0]};
+}
+
+// kind of register user
+export const signupAuthor = async (_, { input }, context) => {
+  const { displayname, email } = input;
+  const { exist, author } = await getExisitingAuthor(email);
+  
+  // if found already
+  if (exist) {
+    return { exist, author: { ...author, authoruid: author.uid } };
+  }
+
+  // else regiser
+  const username = `@${email.substring(0, email.lastIndexOf('@'))}`;
+  const uid = await getUniqueUid(username);
+  const query = `
+    INSERT INTO authors (displayname, email, uid)
+    VALUES (?, ?, ?)
+  `;
+
+  const result = await mysql.query(query, [displayname, email, uid]);
+  if (result && !result.insertId) {
+    throw Error('Error signing up Author.');
+  }
+
+  return { exist, author: { authoruid: uid, displayname } };
+}
+
+export const signinAuthor = async (_, { email }, context) => {
+  
+  const { exist, author } = await getExisitingAuthor(email);
+
+  return {
+    exist, author: { ...author, authoruid: author && author.uid }
+  }
 }
 
 // kind of update user details
