@@ -3,6 +3,7 @@ if (process.env.NODE_ENV == 'development') {
 }
 
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { applyMiddleware } from 'graphql-middleware';
@@ -10,6 +11,8 @@ import jwt from 'jsonwebtoken';
 
 import middlewares from './src/middlewares/index';
 const app = express();
+
+app.use(cookieParser());
 
 // using console for logging
 global.logger = console;
@@ -26,18 +29,17 @@ const requestlogging = {
 const schemaWithMiddleware = applyMiddleware(schema, ...middlewares);
 
 const context = ({ req }) => { 
-  const token = req.headers.token || '';
-  
+  const token = req.cookies['id_token'];
   if (token) { 
     try {
-      const { displayname, authoruid } = jwt.verify(token, 'React Starter Kit');
-      return { displayname, authoruid };
+      const { displayname, email, authoruid } = jwt.verify(token, 'React Starter Kit');
+      return { displayname, authoruid, email };
     } catch (e) {
       console.log('exception', e);
       throw Error('Some error happens.');
     }
   }
-  
+  return {};
 }
 
 const server = new ApolloServer({
