@@ -6,6 +6,7 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { applyMiddleware } from 'graphql-middleware';
+import jwt from 'jsonwebtoken';
 
 import middlewares from './src/middlewares/index';
 const app = express();
@@ -24,8 +25,24 @@ const requestlogging = {
 
 const schemaWithMiddleware = applyMiddleware(schema, ...middlewares);
 
+const context = ({ req }) => { 
+  const token = req.headers.token || '';
+  
+  if (token) { 
+    try {
+      const { displayname, authoruid } = jwt.verify(token, 'React Starter Kit');
+      return { displayname, authoruid };
+    } catch (e) {
+      console.log('exception', e);
+      throw Error('Some error happens.');
+    }
+  }
+  
+}
+
 const server = new ApolloServer({
   schema: schemaWithMiddleware,
+  context,
   plugins: [],//requestlogging
   onHealthCheck: () => {
     return new Promise((resolve, reject) => {
