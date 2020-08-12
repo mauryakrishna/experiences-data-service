@@ -47,20 +47,19 @@ const getUniqueUid = async (username) => {
   `;
 
   const result = await mysql.query(query);
-
+  
   let uid = username;
-
-  if (result.includes(username)) {
+  const usernameset = result.map((user) => { return user.uid });
+  
+  if (usernameset.includes(username)) {
     // if found means uid duplicate, so generate unique
     do { 
-      let randomNumber = Math.floor(Math.random(4) * 1000); // 3 digit 
-      let newusername = `${username}${randomNumber}`;
+      let randomNumber = Math.floor(Math.random(3) * 1000); // 3 digit 
+      uid = `${username}${randomNumber}`;
     }
-    while (result.includes(newusername) !== false)
-    
-    uid = newusername;
+    while (usernameset.includes(uid) !== false)
   }
-  
+
   return uid;
 }
 
@@ -70,6 +69,13 @@ const getExisitingAuthor = async (email) => {
   const result = await mysql.query(query, [email]);
   
   return {exist: !!result.length, author: result[0]};
+}
+
+export const buttonPressRegister = async (_, __, context) => { 
+  const { displayname, email } = context;
+  const variables = { input: { displayname, email } };
+
+  return await signupAuthor(_, variables, context);
 }
 
 // kind of register user

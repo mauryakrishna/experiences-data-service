@@ -4,7 +4,7 @@ import {
   exampleupdate, examplequery,
   saveExperience, getExperiences, getAnExperienceForRead, getAnExperienceForEdit, saveTitle, publishExperience,
   saveNPublishExperience,
-  getAuthor, signupAuthor, signinAuthor, updateAuthor
+  getAuthor, buttonPressRegister, signupAuthor, signinAuthor, updateAuthor
 } from './resolvers';
 import types from './types';
 
@@ -29,6 +29,7 @@ const Mutation = gql`
     saveTitle(input: SaveTitleInput): SaveTitleResponse
 
     signupAuthor(input: SignupAuthorInput): SignAuthorResponse
+    buttonPressRegister: SignAuthorResponse
     updateAuthor(input: UpdateAuthorInput): UpdateAuthorResponse
   }
 `;
@@ -50,6 +51,7 @@ const resolvers = {
     publishExperience,
     saveNPublishExperience,
     saveTitle,
+    buttonPressRegister,
     signupAuthor,
     updateAuthor
   }
