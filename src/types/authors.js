@@ -8,7 +8,12 @@ const Authors = gql`
     shortintro: String!
     experiences: [Experience]
   }
-
+  
+  type VerifyMeResponse {
+    valid: Boolean!
+    displayname: String
+    authoruid: String
+  }
   type AuthorBioResponse {
     displayname: String
     authoruid: String

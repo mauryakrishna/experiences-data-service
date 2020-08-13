@@ -4,13 +4,14 @@ import {
   exampleupdate, examplequery,
   saveExperience, getExperiences, getAnExperienceForRead, getAnExperienceForEdit, saveTitle, publishExperience,
   saveNPublishExperience,
-  getAuthor, buttonPressRegister, signupAuthor, signinAuthor, updateAuthor
+  getAuthor, buttonPressRegister, signupAuthor, signinAuthor, updateAuthor, verifyMe
 } from './resolvers';
 import types from './types';
 
 const Query = gql`
   type Query {
     examplequery: ExampleType
+    verifyMe: VerifyMeResponse
     getExperiences(cursor: String, experienceperpage: Int!): GetExperiencesResponse
     getAnExperienceForRead(slugkey: String!): Experience
     getAnExperienceForEdit(slugkey: String): EditExperience
@@ -39,6 +40,7 @@ const typeDefs = [Query, Mutation, ...Object.entries(types).map(e => e[1])];
 const resolvers = {
   Query: {
     examplequery,
+    verifyMe,
     getExperiences,
     getAnExperienceForRead,
     getAnExperienceForEdit,
