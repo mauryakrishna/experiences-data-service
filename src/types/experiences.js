@@ -46,27 +46,23 @@ const Experiences = gql`
 const ExperiencesInput = gql`
 
   input SaveExperienceInput {
-    authoruid: String!
     slugkey: String
     experience: JSONObject!
   }
 
   input SaveTitleInput {
-    authoruid: String!
     slugkey: String
     title: String!
   }
 
   input PublishExperienceInput {
     slugkey: String
-    authoruid: String!
   }
 
   input SaveNPublishExperienceInput {
     slugkey: String
     title: String!
     experience: JSONObject!
-    authoruid: String!
   }
 `;
 

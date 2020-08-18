@@ -22,7 +22,8 @@ const createARowWithSlugKey = async (authoruid) => {
 };
 
 export const saveTitle = async (_, { input }, context) => { 
-  const { title, authoruid } = input;
+  const { title } = input;
+  const { authoruid } = context;
 
   const slug = getSlug(title);
   
@@ -44,8 +45,9 @@ export const saveTitle = async (_, { input }, context) => {
 }
 
 export const saveExperience = async (_, { input }, context) => {
-  const { authoruid, experience } = input;
-  
+  const { experience } = input;
+  const { authoruid } = context;
+
   let slugkey = input.slugkey;
   // no slugkey means new record
   if (!slugkey) { 
@@ -140,7 +142,8 @@ export const getAnExperienceForEdit = async (_, { slugkey }, context) => {
 };
 
 export const publishExperience = async (_, { input }, context) => {
-  const { slugkey, authoruid } = input;
+  const { slugkey } = input;
+  const { authoruid } = context;
 
   const query = `
     UPDATE experiences 
@@ -173,8 +176,9 @@ export const publishExperience = async (_, { input }, context) => {
 }
 
 export const saveNPublishExperience = async (_, { input }, context) => {
-  const { slugkey, title, experience, authoruid } = input;
-
+  const { slugkey, title, experience } = input;
+  const { authoruid } = context;
+  
   const query = `
     UPDATE experiences
     SET title = ?, experience = ?
