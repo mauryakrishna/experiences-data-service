@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 
 const Authors = gql`
   type Author {
+    id: Int!
     uid: String!
     displayname: String!
     email: String!

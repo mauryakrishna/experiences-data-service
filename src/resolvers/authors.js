@@ -3,10 +3,10 @@ import mysql from '../connectors/mysql';
 import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
 
 export const verifyMe = (_, __, context) => {
-  const { displayname, authoruid } = context;
-  const valid = !!(displayname && authoruid);
+  const { displayname, authoruid, authorid } = context;
+  const valid = !!(displayname && authoruid && authorid);
   if (valid) { 
-    return { valid, displayname, authoruid };
+    return { valid, displayname, authoruid, authorid };
   }
   return { valid };
 };
@@ -15,7 +15,7 @@ export const verifyMe = (_, __, context) => {
 // get Authors details along both published experiences and unpublished experiences
 // itsme: true - when author himself visit the page 
 // need to know if its authors own or is visitng different author page, difference would be not showing experiences in draft 
-export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, context) => { 
+export const getAuthor = async (_, { cursor, experienceperpage, authorid, itsme }, context) => { 
   
   cursor = cursor || moment().format(EXPERIENCE_PUBLISHDATE_FORMAT);
   experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
@@ -24,13 +24,13 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
   const experiencesQuery = `
     SELECT title, slug, slugkey, ispublished, updated_at
     FROM experiences
-    WHERE authoruid = ? AND updated_at < ?
+    WHERE authorid = ? AND updated_at < ?
     ${(itsme ? '': 'AND ispublished=true')} 
     ORDER BY updated_at DESC
     LIMIT ?
   `;
 
-  const experiencesResult = await mysql.query(experiencesQuery, [uid, cursor, experienceperpage]);
+  const experiencesResult = await mysql.query(experiencesQuery, [authorid, cursor, experienceperpage]);
   
   const len = experiencesResult.length;
   
@@ -38,9 +38,9 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
     cursor = moment(experiencesResult[len - 1].updated_at).format(EXPERIENCE_PUBLISHDATE_FORMAT);
   }
 
-  const query = `SELECT * FROM authors WHERE uid = ?`;
+  const query = `SELECT * FROM authors WHERE id = ?`;
 
-  const result = await mysql.query(query, [uid]);
+  const result = await mysql.query(query, [authorid]);
 
   const author = result[0];
   author.experiences = experiencesResult;
@@ -94,7 +94,7 @@ export const signupAuthor = async (_, { input }, context) => {
   
   // if found already
   if (exist) {
-    return { exist, author: { ...author, authoruid: author.uid } };
+    return { exist, author: { ...author, authoruid: author.uid, authorid: author.id } };
   }
 
   // else regiser
@@ -110,7 +110,7 @@ export const signupAuthor = async (_, { input }, context) => {
     throw Error('Error signing up Author.');
   }
 
-  return { exist, author: { authoruid: uid, displayname } };
+  return { exist, author: { authoruid: uid, displayname, authorid: result.insertId } };
 }
 
 export const signinAuthor = async (_, { email }, context) => {
@@ -118,7 +118,7 @@ export const signinAuthor = async (_, { email }, context) => {
   const { exist, author } = await getExisitingAuthor(email);
 
   return {
-    exist, author: { ...author, authoruid: author && author.uid }
+    exist, author: { ...author, authoruid: author && author.uid, authorid: author.id }
   }
 }
 

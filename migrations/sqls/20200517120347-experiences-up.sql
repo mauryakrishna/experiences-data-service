@@ -1,7 +1,7 @@
 /* Replace with your SQL commands */
 CREATE TABLE `experiences` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `authoruid` varchar(100) NOT NULL,
+  `authorid` bigint(10) NOT NULL,
   `slugkey` varchar(15) DEFAULT NULL, /* though it is produced and used as 11 charecters*/
   `slug` varchar(255) DEFAULT NULL,  /* limited to 200 charecters to accomodate in URL with other slugkey */
   `title` varchar(180) DEFAULT NULL,
