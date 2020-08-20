@@ -19,7 +19,7 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
   
   cursor = cursor || moment().format(EXPERIENCE_PUBLISHDATE_FORMAT);
   experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
-  itsme = itsme || true;
+  itsme = (uid == context.authoruid);
 
   const experiencesQuery = `
     SELECT title, slug, slugkey, ispublished, updated_at
