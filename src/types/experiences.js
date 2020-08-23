@@ -41,6 +41,10 @@ const Experiences = gql`
     slugkey: String
     published: Boolean!
   }
+
+  type DeleteExperienceResponse {
+    deleted: Boolean!
+  }
 `;
 
 const ExperiencesInput = gql`
@@ -63,6 +67,11 @@ const ExperiencesInput = gql`
     slugkey: String
     title: String!
     experience: JSONObject!
+  }
+
+  input DeleteExperienceInput {
+    slugkey: String!
+    authoruid: String!
   }
 `;
 

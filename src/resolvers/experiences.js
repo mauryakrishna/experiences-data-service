@@ -208,3 +208,19 @@ export const saveNPublishExperience = async (_, { input }, context) => {
 
   return { published: ispublished, slug, slugkey };
 };
+
+export const deleteAnExperience = async (_, { input }, context) => { 
+  const { slugkey, authoruid } = input;
+  console.log('context', context.authoruid);
+  // only author of the experience can perform deletion
+  if (authoruid !== context.authoruid) { 
+    return { deleted: false };
+  }
+
+  const query = `
+    DELETE FROM experiences WHERE slugkey=? and authoruid=?
+  `;
+
+  const result = await mysql.query(query, [slugkey, authoruid]);
+  return { deleted: !!result.affectedRows };
+}
