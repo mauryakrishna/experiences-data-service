@@ -91,9 +91,9 @@ export const getExperiences = async (_, { cursor, experienceperpage }, context) 
 export const getAnExperienceForRead = async (_, { slugkey }, context) => { 
   const query = `
     SELECT * FROM experiences
-    WHERE slugkey = ? AND ispublished = ?
+    WHERE slugkey = ? ${context.authoruid? '' : 'AND ispublished = true'}
   `;
-  const result = await mysql.query(query, [slugkey, true]);
+  const result = await mysql.query(query, [slugkey]);
 
   let experience = result[0];
   if (!experience) { 
@@ -211,7 +211,6 @@ export const saveNPublishExperience = async (_, { input }, context) => {
 
 export const deleteAnExperience = async (_, { input }, context) => { 
   const { slugkey, authoruid } = input;
-  console.log('context', context.authoruid);
   // only author of the experience can perform deletion
   if (authoruid !== context.authoruid) { 
     return { deleted: false };
