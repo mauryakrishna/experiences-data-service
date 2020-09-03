@@ -11,6 +11,11 @@ CREATE TABLE `authors` (
   `shortintro` varchar(500) DEFAULT NULL,
   `facebookid` varchar(100) DEFAULT NULL,
   `googleid` varchar(100) DEFAULT NULL,
+  --- region/timezone formats for dates, times and numbers
+  --- https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  `region` varchar(15) DEFAULT NULL,
+  --- Language/locale for buttons, titles and other text from Facebook for this account on experiences
+  `language` varchar(15) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`uid`)

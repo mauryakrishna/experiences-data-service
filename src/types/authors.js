@@ -6,6 +6,8 @@ const Authors = gql`
     displayname: String!
     email: String!
     shortintro: String
+    region: String
+    language: String    
     experiences: [Experience]
   }
   

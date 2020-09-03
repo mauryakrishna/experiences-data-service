@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { SHOW_TO_USER_DATEFORMAT } from '../config/constants';
 
 // the below middleware checks for null title and assign them a string 'Untitled';
@@ -6,7 +5,7 @@ const appendUntitled = (experiences) => {
   if (experiences) { 
     experiences = experiences.map((experience) => { 
       if (!experience.title) { 
-        experience.title = `Untitled, created ${moment(experience.created_at).format(SHOW_TO_USER_DATEFORMAT)}`;
+        experience.title = `Untitled experience`;
       }
       return experience;
     });

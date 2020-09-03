@@ -32,8 +32,8 @@ const context = ({ req }) => {
   const token = req.cookies['id_token'];
   if (token) { 
     try {
-      const { displayname, email, authoruid } = jwt.verify(token, 'React Starter Kit');
-      return { displayname, authoruid, email };
+      const { displayname, email, authoruid, language, region } = jwt.verify(token, 'React Starter Kit');
+      return { displayname, authoruid, email, language, region };
     } catch (e) {
       console.log('exception', e);
       throw Error('Some error happens.');
