@@ -1,7 +1,6 @@
-import moment from 'moment';
 import mysql from '../connectors/mysql';
 import { cursorFormat, createdAtFormat } from '../utils/dateformats';
-import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
+import { EXPERIENCES_PER_PAGE } from '../config/constants';
 
 export const verifyMe = (_, __, context) => {
   const { displayname, authoruid } = context;

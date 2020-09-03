@@ -38,7 +38,6 @@
     "graphql-playground-middleware-express": "1.7.14",
     "graphql-type-json": "0.3.2",
     "jsonwebtoken": "8.5.1",
-    "moment": "2.27.0",
     "mysql2": "2.1.0",
     "slugify": "1.4.0"
   }

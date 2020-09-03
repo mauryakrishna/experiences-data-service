@@ -1,5 +1,5 @@
-import moment from 'moment';
 import mysql from '../connectors/mysql';
+import { cursorFormat, createdAtFormat } from '../utils/dateformats';
 import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
 import { getSlug, getSlugKey } from '../utils/experiences';
 
@@ -67,7 +67,7 @@ export const saveExperience = async (_, { input }, context) => {
 
 // for first 10 experience, load the list for home page
 export const getExperiences = async (_, { cursor, experienceperpage }, context) => {
-  cursor = cursor || moment().format(EXPERIENCE_PUBLISHDATE_FORMAT);
+  cursor = cursor || cursorFormat(new Date());
   experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
 
   const query = `
@@ -81,7 +81,7 @@ export const getExperiences = async (_, { cursor, experienceperpage }, context) 
   
   const len = result.length;
   if (len > 0) { 
-    cursor = moment(result[len - 1].publishdate).format(EXPERIENCE_PUBLISHDATE_FORMAT);
+    cursor = cursorFormat(new Date(result[len - 1].publishdate));
   }
 
   return { cursor, experiences: result || [] };
