@@ -1,5 +1,5 @@
 import mysql from '../connectors/mysql';
-import { cursorFormat, createdAtFormat } from '../utils/dateformats';
+import { cursorFormat, createdAtFormat, publishDateFormat } from '../utils/dateformats';
 import { EXPERIENCES_PER_PAGE } from '../config/constants';
 
 export const verifyMe = (_, __, context) => {
@@ -44,6 +44,11 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
   const author = result[0];
   author.experiences = experiencesResult.map((exp) => { 
     exp.created_at = createdAtFormat(exp.created_at);
+    
+    if (exp.publishdate) { 
+      exp.publishdate = publishDateFormat(exp.publishdate);
+    }
+    
     return exp;
   });
   
