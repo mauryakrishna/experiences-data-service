@@ -96,8 +96,6 @@ export const getExperiences = async (_, { cursor, experienceperpage }, context) 
     delete exp.displayname;
     return exp;
   });
-
-  console.log('result', result);
   
   return { cursor, experiences: result || [] };
 };

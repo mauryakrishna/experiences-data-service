@@ -9,7 +9,6 @@ slugify.extend({
 
 // the below should output a slug string which pass /^[a-z0-9]+(?:-[a-z0-9]+)*$/i
 export const getSlug = (title) => {
-  console.log('title', title);
   let slug = slugify(title, { strict: true, lower: true }); // remove: /[*+~=.()'"`#!:@]/g,
 
   // no consecutive double dashes
@@ -19,7 +18,6 @@ export const getSlug = (title) => {
     // - at end should not be
     .replace(/-$/g, '')
 
-  console.log('slug', slug);
   const sluglen = slug.length;
 
   if (slug && sluglen > 200) {
