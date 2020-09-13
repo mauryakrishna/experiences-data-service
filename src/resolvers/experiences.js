@@ -1,5 +1,5 @@
 import mysql from '../connectors/mysql';
-import { cursorFormat, createdAtFormat } from '../utils/dateformats';
+import { cursorFormat, createdAtFormat, publishDateFormat } from '../utils/dateformats';
 import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
 import { getSlug, getSlugKey } from '../utils/experiences';
 
@@ -71,19 +71,34 @@ export const getExperiences = async (_, { cursor, experienceperpage }, context) 
   experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
 
   const query = `
-    SELECT * FROM experiences
+    SELECT e.slugkey, e.slug, e.title, e.publishdate,
+    e.experience, e.readcount, e.ispublished, e.created_at, 
+    a.displayname
+    FROM experiences e
+    LEFT JOIN authors a ON (a.uid = e.authoruid)
     WHERE ispublished = ${true} AND publishdate < ?
     ORDER BY publishdate DESC
     LIMIT ?
   `;
 
-  const result = await mysql.query(query, [cursor, experienceperpage]);
-  
+  let result = await mysql.query(query, [cursor, experienceperpage]);
+
   const len = result.length;
   if (len > 0) { 
     cursor = cursorFormat(new Date(result[len - 1].publishdate));
   }
 
+  result = result.map((exp) => { 
+    exp.publishdate = publishDateFormat(exp.publishdate);
+    exp.author = {
+      displayname: exp.displayname
+    };
+    delete exp.displayname;
+    return exp;
+  });
+
+  console.log('result', result);
+  
   return { cursor, experiences: result || [] };
 };
 
