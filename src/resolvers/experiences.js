@@ -114,6 +114,12 @@ export const getAnExperienceForRead = async (_, { slugkey }, context) => {
     return {};
   }
 
+  // experience found
+  const { publishdate } = experience;
+  if (publishdate) { 
+    experience.publishdate = publishDateFormat(publishdate);
+  }
+  
   const authorQuery = `
       SELECT uid, displayname, shortintro FROM authors
       WHERE uid = ?

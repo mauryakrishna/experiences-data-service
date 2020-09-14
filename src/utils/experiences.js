@@ -1,4 +1,7 @@
 import slugify from 'slugify';
+
+import { SLUG_MAX_LENGTH } from '../config/constants';
+
 slugify.extend({
   '>': 'gt',
   '<': 'lt',
@@ -20,8 +23,8 @@ export const getSlug = (title) => {
 
   const sluglen = slug.length;
 
-  if (slug && sluglen > 200) {
-    slug = slug.substr(0, 200);
+  if (slug && sluglen > SLUG_MAX_LENGTH) {
+    slug = slug.substr(0, SLUG_MAX_LENGTH);
   }
   // workaround | should never be the case with strict: true
   else if(sluglen == 0) { 
