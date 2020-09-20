@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import mysql from '../connectors/mysql';
 import { cursorFormat, createdAtFormat, publishDateFormat } from '../utils/dateformats';
 import { EXPERIENCES_PER_PAGE } from '../config/constants';
@@ -80,11 +81,11 @@ const getUniqueUid = async (username) => {
 }
 
 const getExisitingAuthor = async (email) => { 
-  const query = `SELECT * FROM authors WHERE email = ?`;
+  const query = `SELECT email FROM authors WHERE email = ?`;
 
   const result = await mysql.query(query, [email]);
   
-  return {exist: !!result.length, author: result[0]};
+  return {exist: !!result.length};
 }
 
 export const buttonPressRegister = async (_, __, context) => { 
@@ -96,37 +97,63 @@ export const buttonPressRegister = async (_, __, context) => {
 
 // kind of register user
 export const signupAuthor = async (_, { input }, context) => {
-  const { displayname, email } = input;
+  
+  const { displayname, email, password, region, languages } = input;
+
+  // the below is just backend protection from crreatng a duplicate author
   const { exist, author } = await getExisitingAuthor(email);
   
-  // if found already
+  // if found already, this should never happen that while registering we found if the user for 
+  // given email exist, it will be done before reaching this point
   if (exist) {
-    return { exist, author: { ...author, authoruid: author.uid } };
+    return { exist };
   }
 
   // else regiser
   const username = `@${email.substring(0, email.lastIndexOf('@'))}`;
   const uid = await getUniqueUid(username);
   const query = `
-    INSERT INTO authors (displayname, email, uid)
-    VALUES (?, ?, ?)
+    INSERT INTO authors (displayname, email, password, region, languages, uid)
+    VALUES (?, ?, ?, ?, ?, ?)
   `;
 
-  const result = await mysql.query(query, [displayname, email, uid]);
+  const SALT_ROUNDS = 12;
+  const hashpassword = bcrypt.hashSync(password, SALT_ROUNDS);
+  const result = await mysql.query(query, [displayname, email, hashpassword, region, languages, uid]);
   if (result && !result.insertId) {
     throw Error('Error signing up Author.');
   }
 
-  return { exist, author: { authoruid: uid, displayname } };
+  return { exist, author: { authoruid: uid, displayname, region, languages } };
 }
 // login
-export const signinAuthor = async (_, { email }, context) => {
-  
-  const { exist, author } = await getExisitingAuthor(email);
+export const signinAuthor = async (_, { email, password }, context) => {
 
-  return {
-    exist, author: { ...author, authoruid: author && author.uid }
+  const query = `
+    SELECT displayname, uid, languages, region, shortintro, password
+    FROM authors
+    WHERE email=?
+  `;
+
+  const result = await mysql.query(query, [email]);
+  // user may not have signed up
+  if (result && result[0]) {
+    return { exist: false };
   }
+  else { 
+    const match = await bcrypt.compare(password, result[0].password);
+    if (match) {
+      return {
+        exist, author: { ...author, authoruid: author && author.uid }
+      }
+    }
+    else { 
+      return {
+        exist: true, message: "Authentication failed."
+      };
+    }
+  }
+  
 }
 
 // kind of update user details

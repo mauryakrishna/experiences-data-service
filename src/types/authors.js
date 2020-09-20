@@ -7,7 +7,7 @@ const Authors = gql`
     email: String!
     shortintro: String
     region: String
-    language: String    
+    languages: String    
     experiences: [Experience]
   }
   
@@ -19,6 +19,8 @@ const Authors = gql`
   type AuthorBioResponse {
     displayname: String
     authoruid: String
+    region: String
+    languages: String
   }
   
   type GetAuthorResponse {
@@ -29,6 +31,7 @@ const Authors = gql`
   type SignAuthorResponse {
     exist: Boolean!
     author: AuthorBioResponse
+    message: String
   }
 
   type UpdateAuthorResponse {
@@ -42,15 +45,20 @@ const AuthorsInput = gql`
   }
 
   input SignupAuthorInput {
-    displayname: String!
     email: String!
-    facebookid: Int
+    displayname: String!
+    password: String!
+    region: String!
+    languages: String!
+    shortintro: String
   } 
 
   input UpdateAuthorInput {
     authoruid: String!
     displayname: String!
-    shortintro: String!
+    shortintro: String
+    region: String!
+    languages: String!
   }
 `;
 

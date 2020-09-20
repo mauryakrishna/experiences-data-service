@@ -8,9 +8,8 @@ CREATE TABLE `authors` (
   `displayname` varchar(100) NOT NULL,
   -- author email can not be made public, so not used it for unique identfication in experiences system
   `email` varchar(50) NOT NULL,
+  `password` varchar(200) NOT NULL,
   `shortintro` varchar(500) DEFAULT NULL,
-  `facebookid` varchar(100) DEFAULT NULL,
-  `googleid` varchar(100) DEFAULT NULL,
   --- region/timezone formats for dates, times and numbers
   --- https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   `region` varchar(15) DEFAULT NULL,
