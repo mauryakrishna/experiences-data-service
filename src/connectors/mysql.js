@@ -5,9 +5,9 @@ import mysql from 'mysql2';
  * The below env variable check is to avoid the timewasting may happen because of DB
  * connection refuse.
  */ 
-const { MYSQL_USER, MYSQL_HOST } = process.env;
+const { MYSQL_USER, MYSQL_HOST, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_CONNECTION_LIMIT } = process.env;
 
-if (!MYSQL_HOST || !MYSQL_USER) { 
+if (!MYSQL_HOST || !MYSQL_USER || !MYSQL_PASSWORD || !MYSQL_DATABASE || !MYSQL_CONNECTION_LIMIT) { 
   throw Error('DB ENV variables are not loading.');
 }
 

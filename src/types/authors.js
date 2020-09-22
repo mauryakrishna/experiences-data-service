@@ -31,6 +31,7 @@ const Authors = gql`
   type SignAuthorResponse {
     exist: Boolean!
     author: AuthorBioResponse
+    token: String
     message: String
   }
 

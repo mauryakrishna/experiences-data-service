@@ -1,0 +1,30 @@
+From the root of project ./node_modules/db-migrate/bin/db-migrate up
+
+-- Below are the steps for resolving the AUTH_MODE not supported for MySql vers 8.0
+Speciic to MacOS
+1. Stop the mysql service: brew service stop mysqld
+2. Run the command: mysqld_safe --skip-grant-tables --skip-networking &
+3. From the other tab run: mysql -u root
+  It will not ask for password as we are running mysql in skip-grant-table AUTH_MODE
+4. User information is stored in mysql table
+5. update user set authentication_string=null where User="user";
+6. Then exit, killall mysqld mysqld_safe
+7. Try to login with mysql -u user -p
+  This should not ask for password.
+8. Then inside at mysql prompt ALTER USER 'user'@'localhost' IDENTIFIED by 'somepassword';
+9. Try login in with new password.
+10. Done.
+
+Also there are two type of authentication mechanism 'caching_sha2_password' (ver 8) and 'mysql_native_password' (ver older).
+
+References:
+https://www.cyberciti.biz/tips/recover-mysql-root-password.html
+https://chartio.com/resources/tutorials/how-to-grant-all-privileges-on-a-database-in-mysql/
+https://hoststud.com/resources/resolved-error-mysqld_safe-a-mysqld-process-already-exists.141/
+https://medium.com/@crmcmullen/how-to-run-mysql-8-0-with-native-password-authentication-502de5bac661
+
+Add column
+ALTER TABLE tablename ADD columnname data_type;
+
+Drop column command
+ALTER TABLE tablename DROP COLUMN columnname

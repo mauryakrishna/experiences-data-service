@@ -1,6 +1,8 @@
 import bcrypt from 'bcrypt';
+
 import mysql from '../connectors/mysql';
 import { cursorFormat, createdAtFormat, publishDateFormat } from '../utils/dateformats';
+import getAuthToken from '../utils/getauthtoken';
 import { EXPERIENCES_PER_PAGE } from '../config/constants';
 
 export const verifyMe = (_, __, context) => {
@@ -95,19 +97,20 @@ export const buttonPressRegister = async (_, __, context) => {
   return await signupAuthor(_, variables, context);
 }
 
+
 // kind of register user
 export const signupAuthor = async (_, { input }, context) => {
   
-  const { displayname, email, password, region, languages } = input;
+  const { displayname, email, password, shortintro, region, languages } = input;
 
   // the below is just backend protection from crreatng a duplicate author
   const { exist, author } = await getExisitingAuthor(email);
   
   // if found already, this should never happen that while registering we found if the user for 
   // given email exist, it will be done before reaching this point
-  if (exist) {
-    return { exist };
-  }
+  // if (exist) {
+  //   return { exist };
+  // }
 
   // else regiser
   const username = `@${email.substring(0, email.lastIndexOf('@'))}`;
@@ -124,7 +127,22 @@ export const signupAuthor = async (_, { input }, context) => {
     throw Error('Error signing up Author.');
   }
 
-  return { exist, author: { authoruid: uid, displayname, region, languages } };
+  // give token data
+  const tokendata = {
+    uid,
+    displayname,
+    shortintro,
+    region,
+    languages
+  };
+  
+  console.log('tokendata', tokendata);
+
+  const token = getAuthToken(tokendata);
+
+  console.log('token', token);
+
+  return { exist, author: { authoruid: uid, displayname, region, languages, shortintro }, token };
 }
 // login
 export const signinAuthor = async (_, { email, password }, context) => {
@@ -134,17 +152,24 @@ export const signinAuthor = async (_, { email, password }, context) => {
     FROM authors
     WHERE email=?
   `;
-
+  
   const result = await mysql.query(query, [email]);
+  const author = result[0];
+  
   // user may not have signed up
-  if (result && result[0]) {
+  if (!result || !result.length) { 
     return { exist: false };
   }
-  else { 
+  else 
+  { 
     const match = await bcrypt.compare(password, result[0].password);
     if (match) {
+      const tokendata = {
+        ...result[0]
+      };
+      const token = getAuthToken(tokendata);
       return {
-        exist, author: { ...author, authoruid: author && author.uid }
+        exist: true, author: { ...author, authoruid: author && author.uid }, token
       }
     }
     else { 

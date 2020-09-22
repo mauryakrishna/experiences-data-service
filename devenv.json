@@ -7,5 +7,6 @@
   "MYSQL_DATABASE": "exp",
   "MYSQL_CONNECTION_LIMIT": 1,
   "PORT": 4000,
-  "LOG_MYSQL_LATENCY": false
+  "LOG_MYSQL_LATENCY": false,
+  "JWT_SECRET": "experiences-service"
 }

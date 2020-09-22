@@ -9,13 +9,14 @@ CREATE TABLE `authors` (
   -- author email can not be made public, so not used it for unique identfication in experiences system
   `email` varchar(50) NOT NULL,
   `password` varchar(200) NOT NULL,
-  `shortintro` varchar(500) DEFAULT NULL,
-  --- region/timezone formats for dates, times and numbers
-  --- https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  `shortintro` varchar(250) DEFAULT NULL,
+  -- region/timezone formats for dates, times and numbers
+  -- https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
   `region` varchar(15) DEFAULT NULL,
-  --- Language/locale for buttons, titles and other text from Facebook for this account on experiences
-  `language` varchar(15) DEFAULT NULL,
+  -- Language/locale for buttons, titles and other text from Facebook for this account on experiences
+  `languages` varchar(200) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`uid`)
+  PRIMARY KEY (`id`),
+  INDEX(`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

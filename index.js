@@ -29,11 +29,11 @@ const requestlogging = {
 const schemaWithMiddleware = applyMiddleware(schema, ...middlewares);
 
 const context = ({ req }) => { 
-  const token = req.cookies['id_token'];
+  const token = req.header['id_token'];
   if (token) { 
     try {
-      const { displayname, email, authoruid, language, region } = jwt.verify(token, 'React Starter Kit');
-      return { displayname, authoruid, email, language, region };
+      const { displayname, email, authoruid, languages, region } = jwt.verify(token, process.env.JWT_SECRET);
+      return { displayname, email, authoruid,  languages, region };
     } catch (e) {
       console.log('exception', e);
       throw Error('Some error happens.');

@@ -12,8 +12,8 @@ CREATE TABLE `experiences` (
   `ispublished` boolean NOT NULL DEFAULT 0,
   `publishdate` timestamp(6) DEFAULT NULL,  /* used timestamp of precision 6 as this will be used in cursor based pagination */
   `hidedate` timestamp DEFAULT NULL,
-  `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp(6) ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX (`slugkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
