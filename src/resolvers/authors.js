@@ -104,13 +104,13 @@ export const signupAuthor = async (_, { input }, context) => {
   const { displayname, email, password, shortintro, region, languages } = input;
 
   // the below is just backend protection from crreatng a duplicate author
-  const { exist, author } = await getExisitingAuthor(email);
+  const { exist } = await getExisitingAuthor(email);
   
   // if found already, this should never happen that while registering we found if the user for 
   // given email exist, it will be done before reaching this point
-  // if (exist) {
-  //   return { exist };
-  // }
+  if (exist) {
+    return { exist };
+  }
 
   // else regiser
   const username = `@${email.substring(0, email.lastIndexOf('@'))}`;
@@ -135,12 +135,9 @@ export const signupAuthor = async (_, { input }, context) => {
     region,
     languages
   };
-  
-  console.log('tokendata', tokendata);
 
   const token = getAuthToken(tokendata);
 
-  console.log('token', token);
 
   return { exist, author: { authoruid: uid, displayname, region, languages, shortintro }, token };
 }

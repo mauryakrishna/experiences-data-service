@@ -4,6 +4,9 @@ import enGB from 'date-fns/locale/en-GB';
 
 import { EXPERIENCE_CURSOR_FORMAT, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
 
+const wrapperUtcToZonedTime = (dateObject, timeZone) => { 
+  return utcToZonedTime(dateObject, timeZone);
+};
 /**
  * The formatting proided by below functions will be used directly without any further processing
  */
