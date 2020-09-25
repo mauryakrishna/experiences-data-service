@@ -90,6 +90,9 @@ const getExisitingAuthor = async (email) => {
   return {exist: !!result.length};
 }
 
+/**
+ * because fb Oauth is not used, below methodis not in force
+ */
 export const buttonPressRegister = async (_, __, context) => { 
   const { displayname, email } = context;
   const variables = { input: { displayname, email } };
@@ -129,7 +132,8 @@ export const signupAuthor = async (_, { input }, context) => {
 
   // give token data
   const tokendata = {
-    uid,
+    email,
+    authoruid: uid,
     displayname,
     shortintro,
     region,
@@ -139,13 +143,13 @@ export const signupAuthor = async (_, { input }, context) => {
   const token = getAuthToken(tokendata);
 
 
-  return { exist, author: { authoruid: uid, displayname, region, languages, shortintro }, token };
+  return { exist, author: { authoruid: uid, displayname, shortintro, region, languages }, token };
 }
 // login
 export const signinAuthor = async (_, { email, password }, context) => {
 
   const query = `
-    SELECT displayname, uid, languages, region, shortintro, password
+    SELECT displayname, uid as authoruid, languages, region, shortintro, password
     FROM authors
     WHERE email=?
   `;
@@ -162,11 +166,12 @@ export const signinAuthor = async (_, { email, password }, context) => {
     const match = await bcrypt.compare(password, result[0].password);
     if (match) {
       const tokendata = {
+        email,
         ...result[0]
       };
       const token = getAuthToken(tokendata);
       return {
-        exist: true, author: { ...author, authoruid: author && author.uid }, token
+        exist: true, author: { ...author, authoruid: author && author.authoruid }, token
       }
     }
     else { 
@@ -175,7 +180,6 @@ export const signinAuthor = async (_, { email, password }, context) => {
       };
     }
   }
-  
 }
 
 // kind of update user details

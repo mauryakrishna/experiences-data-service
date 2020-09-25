@@ -29,7 +29,7 @@ const requestlogging = {
 const schemaWithMiddleware = applyMiddleware(schema, ...middlewares);
 
 const context = ({ req }) => { 
-  const token = req.header['id_token'];
+  const token = req.headers.authorization;
   if (token) { 
     try {
       const { displayname, email, authoruid, languages, region } = jwt.verify(token, process.env.JWT_SECRET);

@@ -4,6 +4,10 @@ import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/c
 import { getSlug, getSlugKey } from '../utils/experiences';
 
 const createARowWithSlugKey = async (authoruid) => { 
+
+  if (!authoruid) { 
+    throw Error('Authouid is required');
+  }
   
   const slugkey = getSlugKey();
   
@@ -16,7 +20,7 @@ const createARowWithSlugKey = async (authoruid) => {
     return slugkey;
   }
   catch (error) { 
-    throw Error('Error inserting a record.');
+    throw Error('Error inserting a record.', error);
   }
   
 };
