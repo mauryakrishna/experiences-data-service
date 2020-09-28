@@ -30,6 +30,7 @@ const Mutation = gql`
     saveTitle(input: SaveTitleInput): SaveTitleResponse
 
     signupAuthor(input: SignupAuthorInput): SignAuthorResponse
+    forgotpassword(input: ForgotPasswordInput) : ForgotPasswordResponse
     buttonPressRegister: SignAuthorResponse
     updateAuthor(input: UpdateAuthorInput): UpdateAuthorResponse
   }

@@ -16,6 +16,7 @@ const Authors = gql`
     displayname: String
     authoruid: String
   }
+  
   type AuthorBioResponse {
     displayname: String
     authoruid: String
@@ -38,6 +39,11 @@ const Authors = gql`
   type UpdateAuthorResponse {
     updated: Boolean!
   }
+
+  type ForgotPasswordResponse {
+    emailsent: Boolean!
+  } 
+
 `;
 
 const AuthorsInput = gql`
@@ -60,6 +66,10 @@ const AuthorsInput = gql`
     shortintro: String
     region: String!
     languages: String!
+  }
+
+  input ForgotPasswordInput {
+    email: String!
   }
 `;
 
