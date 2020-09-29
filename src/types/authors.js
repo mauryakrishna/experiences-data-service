@@ -45,6 +45,10 @@ const Authors = gql`
     userexist: Boolean
   } 
 
+  type ResetPasswordResponse {
+    passwordupdated: Boolean!
+    validrequest: Boolean
+  }
 `;
 
 const AuthorsInput = gql`
@@ -71,6 +75,11 @@ const AuthorsInput = gql`
 
   input ForgotPasswordInput {
     email: String!
+  }
+
+  input ResetPasswordInput {
+    resetrequestkey: String!
+    newpassword: String!
   }
 `;
 

@@ -4,7 +4,7 @@ import getAlphanumeric from '../utils/getalphanumeric';
 import { addMinutesInCurrentTime } from '../utils/dateformats';
 import { FORGOT_PASSWORD_LINK_EXPIRY_TIME } from '../config/constants';
 
-export const ForgotPasswordMails = async (_, { input, }, context) => {
+export const ForgotPasswordMails = async (_, { input }, context) => {
   const { email } = input;
   // email valid string
   if(!email) {
@@ -13,7 +13,7 @@ export const ForgotPasswordMails = async (_, { input, }, context) => {
 
   // user exist with that email?
   const query = `
-    SELECT email from authors 
+    SELECT email FROM authors 
     WHERE email=?
   `;
 
