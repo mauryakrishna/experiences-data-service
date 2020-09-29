@@ -8,5 +8,6 @@
   "MYSQL_CONNECTION_LIMIT": 1,
   "PORT": 4000,
   "LOG_MYSQL_LATENCY": false,
-  "JWT_SECRET": "experiences-service"
+  "JWT_SECRET": "experiences-service",
+  "APP_URL": "http://localhost:3000/reset-password?"
 }

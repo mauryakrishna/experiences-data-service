@@ -1,4 +1,4 @@
-import { format, formatRelative, formatDistanceStrict, formatDistanceToNow, formatDistanceToNowStrict } from 'date-fns';
+import { format, formatRelative, formatDistanceStrict, formatDistanceToNow, formatDistanceToNowStrict, addMinutes } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
 import enGB from 'date-fns/locale/en-GB';
 
@@ -33,4 +33,13 @@ export const createdAtFormat = (createdAtDate) => {
 export const publishDateFormat = (publishdate) => { 
   const date = utcToZonedTime(publishdate);
   return format(date, EXPERIENCE_PUBLISHDATE_FORMAT);
+};
+/**
+ * add minutes from the current date
+ */
+export const addMinutesInCurrentTime = (minutes) => {
+  if (!minutes || typeof minutes !== 'number') { 
+    throw Error('Miutes should be number.');
+  }
+  return addMinutes(new Date(), minutes);
 };

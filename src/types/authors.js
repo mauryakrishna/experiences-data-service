@@ -42,6 +42,7 @@ const Authors = gql`
 
   type ForgotPasswordResponse {
     emailsent: Boolean!
+    userexist: Boolean
   } 
 
 `;
