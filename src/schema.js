@@ -6,6 +6,10 @@ import {
   saveNPublishExperience, deleteAnExperience,
   getAuthor, buttonPressRegister, signupAuthor, signinAuthor, updateAuthor, verifyMe
 } from './resolvers';
+
+import forgotPassword from './resolvers/forgotpassword';
+import resetPassword from './resolvers/resetpassword';
+
 import types from './types';
 
 const Query = gql`
@@ -30,8 +34,8 @@ const Mutation = gql`
     saveTitle(input: SaveTitleInput): SaveTitleResponse
 
     signupAuthor(input: SignupAuthorInput): SignAuthorResponse
-    forgotpassword(input: ForgotPasswordInput) : ForgotPasswordResponse
-    resetpassword(input: ResetPasswordInput): ResetPasswordResponse
+    forgotPassword(input: ForgotPasswordInput) : ForgotPasswordResponse
+    resetPassword(input: ResetPasswordInput): ResetPasswordResponse
     buttonPressRegister: SignAuthorResponse
     updateAuthor(input: UpdateAuthorInput): UpdateAuthorResponse
   }
@@ -58,7 +62,9 @@ const resolvers = {
     saveTitle,
     buttonPressRegister,
     signupAuthor,
-    updateAuthor
+    updateAuthor,
+    forgotPassword,
+    resetPassword
   }
 };
 

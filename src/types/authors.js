@@ -47,7 +47,7 @@ const Authors = gql`
 
   type ResetPasswordResponse {
     passwordupdated: Boolean!
-    validrequest: Boolean
+    requestexpired: Boolean
   }
 `;
 

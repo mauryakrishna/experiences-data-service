@@ -7,5 +7,5 @@ export default (inputstring) => {
     throw Error('Invalid string for hashing.');
   }
 
-  return bcrypt.hashSync(password, SALT_ROUNDS);
+  return bcrypt.hashSync(inputstring, SALT_ROUNDS);
 }

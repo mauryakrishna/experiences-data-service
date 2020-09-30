@@ -13,7 +13,7 @@ var supportMail = 'support@yourdomain.in',
     noreplyMail = 'no-reply@yourdomain.in',
     ideasMail = 'ideas@yourdomain.in';
 
-export const sendMail = async ({ toemail, mailsubject, htmltemplate}) => {
+export default async ({ toemail, mailsubject, htmltemplate}) => {
     var mailOptions={
         from: noreplyMail,
         to : toemail,

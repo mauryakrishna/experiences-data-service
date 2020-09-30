@@ -4,7 +4,7 @@ import getAlphanumeric from '../utils/getalphanumeric';
 import { addMinutesInCurrentTime } from '../utils/dateformats';
 import { FORGOT_PASSWORD_LINK_EXPIRY_TIME } from '../config/constants';
 
-export const ForgotPasswordMails = async (_, { input }, context) => {
+export default async (_, { input }, context) => {
   const { email } = input;
   // email valid string
   if(!email) {
@@ -29,15 +29,17 @@ export const ForgotPasswordMails = async (_, { input }, context) => {
   const randomuniquekey = getAlphanumeric();
   // store the key in tracker for request validating
   const keyquery = `
-    INSERT INTO tracker (key, expiry)
-    VALUES (?, ?)
+    INSERT INTO tracker (email, requestkey, expiry)
+    VALUES (?, ?, ?)
   `;
 
-  const storeresult = mysql.query(keyquery, [randomuniquekey, addMinutesInCurrentTime(FORGOT_PASSWORD_LINK_EXPIRY_TIME)]);
+  const expirytime = addMinutesInCurrentTime(FORGOT_PASSWORD_LINK_EXPIRY_TIME);
+
+  const storeresult = await mysql.query(keyquery, [email, randomuniquekey, expirytime]);
 
   let resetpasswordlink = ``;
   if (storeresult && storeresult.insertId) { 
-    resetpasswordlink = `${process.env.APP_URL}?reset-password=${randomuniquekey}`;
+    resetpasswordlink = `${process.env.APP_URL}/reset-password/${randomuniquekey}`;
   }
   
   // at this point user exist and valid
@@ -51,12 +53,13 @@ export const ForgotPasswordMails = async (_, { input }, context) => {
           <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
       <body>
+      ${resetpasswordlink}
       </body>
     </html>
   `;
 
   const response = await SendMail({ toemail, mailsubject, htmltemplate });
   if (response) { 
-    return { emailsent: true };
+    return { emailsent: true, userexist: true };
   }
 }
