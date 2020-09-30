@@ -30,7 +30,7 @@ export default async (_, { input }, context) => {
 
   const { email, expiry } = found[0];
 
-  console.log('before before');
+  
   //if request not expired
   if (!isBefore(new Date(), new Date(expiry))) { 
     return {
@@ -38,7 +38,7 @@ export default async (_, { input }, context) => {
       requestexpired: true
     };
   }
-  console.log('shd not print');
+  
   // update password
   const updatequery = `
     UPDATE authors
