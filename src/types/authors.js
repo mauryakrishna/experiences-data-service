@@ -34,6 +34,8 @@ const Authors = gql`
     author: AuthorBioResponse
     token: String
     message: String
+    verificationkey: String
+    isemailverified: Boolean
   }
 
   type UpdateAuthorResponse {
@@ -48,6 +50,16 @@ const Authors = gql`
   type ResetPasswordResponse {
     passwordupdated: Boolean!
     requestexpired: Boolean
+  }
+
+  type VerifyEmailResponse {
+    verifysuccess: Boolean
+    isemailverified: Boolean
+    requestvalid: Boolean
+  }
+
+  type ResendVerificaionLinkResponse {
+    resendsuccess: Boolean
   }
 `;
 
@@ -80,6 +92,11 @@ const AuthorsInput = gql`
   input ResetPasswordInput {
     resetrequestkey: String!
     newpassword: String!
+  }
+
+  input VerifyEmailInput {
+    email: String!
+    verificationkey: String!
   }
 `;
 

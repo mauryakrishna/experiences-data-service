@@ -6,3 +6,5 @@ export const SHOW_TO_USER_DATEFORMAT = 'DD MMM YYYY, HH:MM A';
 export const SLUG_MAX_LENGTH = 90;
 
 export const FORGOT_PASSWORD_LINK_EXPIRY_TIME = 60; // in minutes
+
+export const VERIFICATION_LINK_EXPIRY_TIME = 24 * 60 // in minutes

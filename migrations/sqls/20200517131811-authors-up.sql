@@ -8,6 +8,8 @@ CREATE TABLE `authors` (
   `displayname` varchar(100) NOT NULL,
   -- author email can not be made public, so not used it for unique identfication in experiences system
   `email` varchar(50) NOT NULL,
+  -- has user verified email
+  `isemailverified` boolean NOT NULL DEFAULT 0,
   `password` varchar(200) NOT NULL,
   `shortintro` varchar(250) DEFAULT NULL,
   -- region/timezone formats for dates, times and numbers

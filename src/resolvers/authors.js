@@ -1,9 +1,10 @@
 import bcrypt from 'bcrypt';
-
 import mysql from '../connectors/mysql';
-import { cursorFormat, createdAtFormat, publishDateFormat } from '../utils/dateformats';
 import getAuthToken from '../utils/getauthtoken';
-import { EXPERIENCES_PER_PAGE } from '../config/constants';
+import getAlphanumeric from '../utils/getalphanumeric';
+import SendEmailVerificationLink from '../mails/sendemailverificationlink';
+import { EXPERIENCES_PER_PAGE, VERIFICATION_LINK_EXPIRY_TIME } from '../config/constants';
+import { cursorFormat, createdAtFormat, publishDateFormat, addMinutesInCurrentTime } from '../utils/dateformats';
 
 export const verifyMe = (_, __, context) => {
   const { displayname, authoruid } = context;
@@ -83,11 +84,14 @@ const getUniqueUid = async (username) => {
 }
 
 const getExisitingAuthor = async (email) => { 
-  const query = `SELECT email FROM authors WHERE email = ?`;
+  const query = `SELECT email, isemailverified FROM authors WHERE email = ?`;
 
   const result = await mysql.query(query, [email]);
   
-  return {exist: !!result.length};
+  if (result && result.length) { 
+    return {exist: true, isemailverified: result[0].isemailverified}
+  }
+  return {exist: false};
 }
 
 /**
@@ -100,6 +104,25 @@ export const buttonPressRegister = async (_, __, context) => {
   return await signupAuthor(_, variables, context);
 }
 
+const setForAccountVerification = async (email) => { 
+  // after inserting a user, set for email verification
+  const verificationkey = getAlphanumeric();
+  const verificationQuery = `
+    INSERT INTO tracker (email, requestkey, expiry)
+    VALUES (?,?,?)
+  `;
+
+  const verifytracker = await mysql.query(verificationQuery, [email, verificationkey, addMinutesInCurrentTime(VERIFICATION_LINK_EXPIRY_TIME)]);
+  
+  // send mail for verifying email address
+  // await SendEmailVerificationMail(email, verificationkey);
+
+};
+
+export const resendVerificationLink = async (_, { email }, context) => { 
+  await setForAccountVerification(email);
+  return { resendsuccess: true };
+}
 
 // kind of register user
 export const signupAuthor = async (_, { input }, context) => {
@@ -107,12 +130,12 @@ export const signupAuthor = async (_, { input }, context) => {
   const { displayname, email, password, shortintro, region, languages } = input;
 
   // the below is just backend protection from crreatng a duplicate author
-  const { exist } = await getExisitingAuthor(email);
+  const { exist, isemailverified } = await getExisitingAuthor(email);
   
   // if found already, this should never happen that while registering we found if the user for 
   // given email exist, it will be done before reaching this point
   if (exist) {
-    return { exist };
+    return { exist, isemailverified };
   }
 
   // else regiser
@@ -130,26 +153,16 @@ export const signupAuthor = async (_, { input }, context) => {
     throw Error('Error signing up Author.');
   }
 
-  // give token data
-  const tokendata = {
-    email,
-    authoruid: uid,
-    displayname,
-    shortintro,
-    region,
-    languages
-  };
+  await setForAccountVerification(email);
 
-  const token = getAuthToken(tokendata);
-
-
-  return { exist, author: { authoruid: uid, displayname, shortintro, region, languages }, token };
+  return { exist };
 }
+
 // login
 export const signinAuthor = async (_, { email, password }, context) => {
 
   const query = `
-    SELECT displayname, uid as authoruid, languages, region, shortintro, password
+    SELECT displayname, uid as authoruid, languages, region, shortintro, password, isemailverified
     FROM authors
     WHERE email=?
   `;
@@ -163,6 +176,12 @@ export const signinAuthor = async (_, { email, password }, context) => {
   }
   else 
   { 
+    const { isemailverified } = result[0];
+    // for asking to validate email
+    if (!isemailverified) { 
+      return { exist: true, isemailverified };
+    }
+
     const match = await bcrypt.compare(password, result[0].password);
     if (match) {
       const tokendata = {

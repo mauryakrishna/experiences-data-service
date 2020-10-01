@@ -1,6 +1,6 @@
 import mysql from '../connectors/mysql';
-import SendMail from '../utils/sendemail';
 import getAlphanumeric from '../utils/getalphanumeric';
+import SendResetPasswordLink from '../mails/sendresetpasswordlink';
 import { addMinutesInCurrentTime } from '../utils/dateformats';
 import { FORGOT_PASSWORD_LINK_EXPIRY_TIME } from '../config/constants';
 
@@ -43,22 +43,7 @@ export default async (_, { input }, context) => {
   }
   
   // at this point user exist and valid
-  const toemail = `${email}`;
-  const mailsubject = `Reset your password`;
-  const htmltemplate = `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      </head>
-      <body>
-      ${resetpasswordlink}
-      </body>
-    </html>
-  `;
-
-  const response = await SendMail({ toemail, mailsubject, htmltemplate });
+  const response = await SendResetPasswordLink(email, resetpasswordlink);
   if (response) { 
     return { emailsent: true, userexist: true };
   }
