@@ -43,8 +43,9 @@ const Authors = gql`
   }
 
   type ForgotPasswordResponse {
-    emailsent: Boolean!
+    emailsent: Boolean
     userexist: Boolean
+    isemailverified: Boolean
   } 
 
   type ResetPasswordResponse {

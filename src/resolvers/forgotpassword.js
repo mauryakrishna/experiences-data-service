@@ -13,8 +13,8 @@ export default async (_, { input }, context) => {
 
   // user exist with that email?
   const query = `
-    SELECT email FROM authors 
-    WHERE email=?
+    SELECT email, isemailverified FROM authors 
+    WHERE email=? 
   `;
 
   const result = await mysql.query(query, [email]);
@@ -22,6 +22,15 @@ export default async (_, { input }, context) => {
     return {
       emailsent: false,
       userexist: false
+    }
+  }
+
+  // where to send it if the email is not verified, so check if verified
+  const { isemailverified } = result[0];
+  if (!isemailverified) { 
+    return {
+      emailsent: false,
+      isemailverified: false
     }
   }
 

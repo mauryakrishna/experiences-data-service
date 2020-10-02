@@ -34,6 +34,7 @@ export default async (_, { input }, context) => {
     SELECT email, requestkey, expiry
     FROM tracker
     WHERE email=? AND requestkey=?
+    ORDER BY expiry DESC
   `;
   const verificationrequest = await mysql.query(verificationkeyQuery, [email, verificationkey]);
   if (!verificationrequest || !verificationrequest.length) { 
@@ -42,6 +43,7 @@ export default async (_, { input }, context) => {
     }
   }
   
+  // 0 to pick the latest request as there can be multiple
   const { expiry } = verificationrequest[0];
   if (!isBefore(new Date(), new Date(expiry))) { 
     return {

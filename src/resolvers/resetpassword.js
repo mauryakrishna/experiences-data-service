@@ -16,6 +16,7 @@ export default async (_, { input }, context) => {
     SELECT email, expiry 
     FROM tracker
     WHERE requestkey=? 
+    ORDER BY expiry DESC
   `;
 
   const found = await mysql.query(query, [resetrequestkey]);
@@ -28,9 +29,9 @@ export default async (_, { input }, context) => {
     };
   }
 
+  // 0 to pick the latest request as there can be multiple
   const { email, expiry } = found[0];
 
-  
   //if request not expired
   if (!isBefore(new Date(), new Date(expiry))) { 
     return {
