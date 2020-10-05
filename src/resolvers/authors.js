@@ -190,12 +190,12 @@ export const signinAuthor = async (_, { email, password }, context) => {
       };
       const token = getAuthToken(tokendata);
       return {
-        exist: true, author: { ...author, authoruid: author && author.authoruid }, token
+        exist: true, author: { ...author, authoruid: author && author.authoruid }, token, isemailverified
       }
     }
     else { 
       return {
-        exist: true, message: "Authentication failed."
+        exist: true, message: "Authentication failed.", isemailverified
       };
     }
   }
