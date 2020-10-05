@@ -82,8 +82,6 @@ const AuthorsInput = gql`
     authoruid: String!
     displayname: String!
     shortintro: String
-    region: String!
-    languages: String!
   }
 
   input ForgotPasswordInput {
@@ -96,8 +94,7 @@ const AuthorsInput = gql`
   }
 
   input VerifyEmailInput {
-    email: String!
-    verificationkey: String!
+    verifykey: String!
   }
 `;
 

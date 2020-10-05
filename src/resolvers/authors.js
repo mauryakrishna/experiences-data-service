@@ -114,9 +114,8 @@ const setForAccountVerification = async (email) => {
 
   const verifytracker = await mysql.query(verificationQuery, [email, verificationkey, addMinutesInCurrentTime(VERIFICATION_LINK_EXPIRY_TIME)]);
   
-  // send mail for verifying email address
-  // await SendEmailVerificationMail(email, verificationkey);
-
+  //send mail for verifying email address
+  await SendEmailVerificationLink(email, verificationkey);
 };
 
 export const resendVerificationLink = async (_, { email }, context) => { 

@@ -11,6 +11,6 @@
   "JWT_SECRET": "experiences-service",
   "APP_URL": "http://localhost:3000",
   "AMAZON_ACCESS_KEY_ID": "amazonaccesskeyid",
-  "AMAZON_SECRET_ACCESS_KEY": "amazonsecretaccesskey"
-
+  "AMAZON_SECRET_ACCESS_KEY": "amazonsecretaccesskey",
+  "CRYPTOJS_SECRET_KEY": "secretkey"
 }

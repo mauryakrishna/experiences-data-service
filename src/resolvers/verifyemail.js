@@ -1,13 +1,32 @@
 import { isBefore } from 'date-fns';
 import mysql from '../connectors/mysql';
+import { decrypt } from '../utils/getencrypteddata';
 import { VERIFICATION_LINK_EXPIRY_TIME } from '../config/constants';
 
 export default async (_, { input }, context) => { 
-  const { email, verificationkey } = input;
-  if (!email || !verificationkey) { 
+  const {  verifykey } = input;
+  if (!verifykey) { 
     return {
       requestvalid: false
     };
+  }
+
+  console.log('verifykey', verifykey);
+  // decrypt the verification key for email
+  const decrypted = decrypt(verifykey);
+  
+  try {
+    const { email, verificationkey } = JSON.parse(decrypted);
+    if (!email || !verificationkey) {
+      return {
+        requestvalid: false
+      };
+    }
+  }
+  catch (err) { 
+    return {
+      requestvalid: false
+    }
   }
 
   // if email not already verified
@@ -15,12 +34,14 @@ export default async (_, { input }, context) => {
     SELECT isemailverified FROM authors
     WHERE email=?
   `;
+  
   const found = await mysql.query(validemailquery, [email]);
   if (!found || !found.length) { 
     return {
       requestvalid: false
     }
   }
+  
   const { isemailverified } = found[0];
   
   if (isemailverified) { 
