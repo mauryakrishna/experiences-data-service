@@ -6,7 +6,7 @@ export default async (email, verificationkey) => {
   const mailsubject = `Verify your account`;
   const htmltemplate = ``;
 
-  const verificationURL = `${process.env.APP_URL}/verify/${encrypt({ toemail, verificationkey })}`;
+  const verificationURL = `${process.env.APP_URL}/verify/${encrypt(JSON.stringify({ email, verificationkey }))}`;
   
   console.log('verificationURL', verificationURL);
   //return await SendMail({toemail, mailsubject, htmltemplate});

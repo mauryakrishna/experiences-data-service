@@ -9,7 +9,7 @@ import {
 
 import forgotPassword from './resolvers/forgotpassword';
 import resetPassword from './resolvers/resetpassword';
-import verifyemail from './resolvers/verifyemail';
+import verifyEmail from './resolvers/verifyemail';
 
 import types from './types';
 
@@ -34,7 +34,7 @@ const Mutation = gql`
     deleteAnExperience(input: DeleteExperienceInput): DeleteExperienceResponse
     saveTitle(input: SaveTitleInput): SaveTitleResponse
 
-    verifyemail(input: VerifyEmailInput): VerifyEmailResponse
+    verifyEmail(input: VerifyEmailInput): VerifyEmailResponse
     resendVerificationLink(email: String!): ResendVerificaionLinkResponse
     signupAuthor(input: SignupAuthorInput): SignAuthorResponse
     forgotPassword(input: ForgotPasswordInput) : ForgotPasswordResponse
@@ -68,7 +68,7 @@ const resolvers = {
     updateAuthor,
     forgotPassword,
     resetPassword,
-    verifyemail,
+    verifyEmail,
     resendVerificationLink
   }
 };
