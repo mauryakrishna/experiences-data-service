@@ -4,31 +4,38 @@ import { decrypt } from '../utils/getencrypteddata';
 import { VERIFICATION_LINK_EXPIRY_TIME } from '../config/constants';
 
 export default async (_, { input }, context) => { 
-  const {  verifykey } = input;
+  let { verifykey } = input;
+  verifykey = decodeURIComponent(verifykey);
+
   if (!verifykey) { 
     return {
       requestvalid: false
     };
   }
 
-  console.log('verifykey', verifykey);
   // decrypt the verification key for email
   const decrypted = decrypt(verifykey);
   
+  let email = null;
+  let verificationkey = null;
+
   try {
-    const { email, verificationkey } = JSON.parse(decrypted);
-    if (!email || !verificationkey) {
-      return {
-        requestvalid: false
-      };
-    }
+    const parsed = JSON.parse(decrypted);
+    email = parsed.email;
+    verificationkey = parsed.verificationkey;
   }
   catch (err) { 
     return {
       requestvalid: false
     }
+  }  
+  
+  if (!email || !verificationkey) {
+    return {
+      requestvalid: false
+    };
   }
-
+  
   // if email not already verified
   const validemailquery = `
     SELECT isemailverified FROM authors
