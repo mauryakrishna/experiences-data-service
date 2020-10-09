@@ -15,6 +15,12 @@ const Experiences = gql`
     created_at: Date
   }
 
+  type ExperienceNotFound {
+    experiencefound: Boolean
+  }
+
+  union ExperienceResult = Experience | ExperienceNotFound
+
   type GetExperiencesResponse {
     cursor: String!
     experiences: [Experience!] 

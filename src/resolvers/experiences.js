@@ -115,7 +115,10 @@ export const getAnExperienceForRead = async (_, { slugkey }, context) => {
   let experience = result[0];
   if (!experience) { 
     console.log(`Could not find experience for ${slugkey}`);
-    return {};
+    return {
+      __typename: 'ExperienceNotFound',
+      experiencefound: false
+    };
   }
 
   // experience found
@@ -137,7 +140,10 @@ export const getAnExperienceForRead = async (_, { slugkey }, context) => {
 
   experience.author = author[0];
 
-  return experience;
+  return {
+    __typename: 'Experience',
+    ...experience
+  };
 };
 
 // single edit

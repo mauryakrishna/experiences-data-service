@@ -18,7 +18,7 @@ const Query = gql`
     examplequery: ExampleType
     verifyMe: VerifyMeResponse
     getExperiences(cursor: String, experienceperpage: Int!): GetExperiencesResponse
-    getAnExperienceForRead(slugkey: String!): Experience
+    getAnExperienceForRead(slugkey: String!): ExperienceResult
     getAnExperienceForEdit(slugkey: String): EditExperience
     getAuthor(cursor: String, experienceperpage: Int!, uid: String!): GetAuthorResponse
     signinAuthor(email: String!, password: String!): SignAuthorResponse
@@ -70,7 +70,13 @@ const resolvers = {
     resetPassword,
     verifyEmail,
     resendVerificationLink
+  },
+  ExperienceResult: {
+    __resolveType: (experience) => { 
+      return experience.__typename;
+    }
   }
+  
 };
 
 const schema = makeExecutableSchema({
