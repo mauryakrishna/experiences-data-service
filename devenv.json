@@ -1,16 +1,16 @@
 {
   "NODE_ENV": "development",
+  "PORT": 4000,
   "MYSQL_USER": "newuser",
   "MYSQL_HOST": "mysql",
   "MYSQL_PORT": "3306",
   "MYSQL_PASSWORD": "password",
   "MYSQL_DATABASE": "exp",
   "MYSQL_CONNECTION_LIMIT": 1,
-  "PORT": 4000,
   "LOG_MYSQL_LATENCY": false,
-  "JWT_SECRET": "experiences-service",
+  "JWT_SECRET": "$2y$12$Khgh3AWz5s4LmqGkLLRQ1OvFGGu6FbzgAruF/klV8VA.K.VKOglJ2",
   "APP_URL": "http://localhost:3000",
   "AMAZON_ACCESS_KEY_ID": "amazonaccesskeyid",
   "AMAZON_SECRET_ACCESS_KEY": "amazonsecretaccesskey",
-  "CRYPTOJS_SECRET_KEY": "secretkey"
+  "CRYPTOJS_SECRET_KEY": "$2y$15$3I5givhQSG3arAcI6dUhwOrjhpZp9TwKNe/zNhpK7zmZGtl.QNTn."
 }
