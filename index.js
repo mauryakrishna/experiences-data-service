@@ -4,6 +4,8 @@ if (process.env.NODE_ENV == 'development') {
 else {
   require('env2')('./prodenv.json');
 }
+// Beneficial in saving time on production
+console.log(`Loaded environment is ${process.env.NODE_ENV}`);
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
