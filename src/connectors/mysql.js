@@ -24,7 +24,7 @@ const conn = mysql.createConnection(mysqlconfig);
 
 conn.connect(function(err) {
   if (err) {
-    console.error('Error connecting: ' + err);
+    console.error(`Error connecting with user ${MYSQL_USER} and error ${err}`);
     return;
   }
   console.log(`Connection established, thead id ${conn.threadId}.`);
