@@ -8,8 +8,8 @@ import mysql from 'mysql2';
 const { MYSQL_USER, MYSQL_HOST, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_CONNECTION_LIMIT } = process.env;
 
 if (!MYSQL_HOST || !MYSQL_USER || !MYSQL_PASSWORD || !MYSQL_DATABASE || !MYSQL_CONNECTION_LIMIT) { 
-  throw Error('DB ENV variables are not loading.');
   console.log(`User:${MYSQL_USER}, Host:${MYSQL_HOST}, Pwd:${MYSQL_PASSWORD}, Database:${MYSQL_DATABASE}, ConnectionLimit${MYSQL_CONNECTION_LIMIT}`);
+  throw Error('DB ENV variables are not loading.');
 }
 
 const mysqlconfig = {
