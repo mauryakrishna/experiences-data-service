@@ -1,6 +1,9 @@
 if (process.env.NODE_ENV == 'development') { 
   require('env2')('./devenv.json');
 }
+else {
+  require('env2')('./prodenv.json');
+}
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
