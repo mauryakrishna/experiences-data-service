@@ -6,5 +6,5 @@ CREATE TABLE `tracker` (
   `expiry` DATETIME NOT NULL, 
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  INDEX (`key`) 
+  INDEX (`requestkey`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
