@@ -69,7 +69,8 @@ const corsOptions = {
     if (
       origin === undefined ||
       origin === 'http://localhost:4000' ||
-      origin === 'http://localhost:3000'
+      origin === 'http://localhost:3000' ||
+      origin === process.env.APP_URL
     ) {
       callback(null, true);
     } else {
