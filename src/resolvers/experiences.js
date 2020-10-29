@@ -75,7 +75,7 @@ export const getExperiences = async (_, { cursor, experienceperpage }, context) 
   experienceperpage = experienceperpage || EXPERIENCES_PER_PAGE;
 
   const query = `
-    SELECT e.slugkey, e.slug, e.title, e.publishdate,
+    SELECT e.slugkey, e.slug, e.title, e.publishdate, e.authoruid,
     e.experience, e.readcount, e.ispublished, e.created_at, 
     a.displayname
     FROM experiences e
@@ -95,9 +95,11 @@ export const getExperiences = async (_, { cursor, experienceperpage }, context) 
   result = result.map((exp) => { 
     exp.publishdate = publishDateFormat(exp.publishdate);
     exp.author = {
-      displayname: exp.displayname
+      displayname: exp.displayname,
+      uid: exp.authoruid
     };
     delete exp.displayname;
+    delete exp.authoruid;
     return exp;
   });
   
