@@ -5,17 +5,13 @@ var ses = require('nodemailer-ses-transport');
 var sesTransport = nodemailer.createTransport(ses({
     accessKeyId: process.env.AMAZON_ACCESS_KEY_ID,
     secretAccessKey: process.env.AMAZON_SECRET_ACCESS_KEY,
-    region: 'us-west-2'
+    region: 'us-east-2'
 }));
 
 // http://budiirawan.com/send-emails-using-amazon-ses-and-node-js/
-var supportMail = 'support@yourdomain.in',
-    noreplyMail = 'no-reply@yourdomain.in',
-    ideasMail = 'ideas@yourdomain.in';
-
 export default async ({ toemail, mailsubject, htmltemplate}) => {
-  var mailOptions={
-      from: noreplyMail,
+  var mailOptions = {
+      from: process.env.AMAZON_SES_FROM_EMAIL,
       to : toemail,
       subject : mailsubject,
       html: htmltemplate
