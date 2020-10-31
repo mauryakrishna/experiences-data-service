@@ -7,7 +7,7 @@ export default async ({ to, subject, templatepath, maildata }) => {
   fs.readFile(templatepath, { encoding: 'UTF-8' }, (err, templatedata) => { 
     if (!err) {
       const html = _.template(templatedata, maildata);
-      const response = await SendMail({to, subject, html});
+      SendMail({to, subject, html});
     }
     else { 
       console.log(`[ERROR] reading templatepath ${templatepath} | Error: ${err}`);
