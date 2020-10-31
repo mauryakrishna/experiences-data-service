@@ -9,12 +9,12 @@ var sesTransport = nodemailer.createTransport(ses({
 }));
 
 // http://budiirawan.com/send-emails-using-amazon-ses-and-node-js/
-export default async ({ toemail, mailsubject, htmltemplate}) => {
+export default async ({ to, subject, html }) => {
   var mailOptions = {
       from: process.env.AMAZON_SES_FROM_EMAIL,
-      to : toemail,
-      subject : mailsubject,
-      html: htmltemplate
+      to,
+      subject,
+      html
   };
 
   return await sesTransport.sendMail(mailOptions);

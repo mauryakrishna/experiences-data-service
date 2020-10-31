@@ -1,15 +1,17 @@
 import { encrypt } from '../utils/getencrypteddata';
-import SendMail from '../utils/sendemail';
+import sendMail from './sendemail';
 
-export default async (email, verificationkey) => { 
-  const toemail = email;
-  const mailsubject = `Verify your account`;
-  const htmltemplate = ``;
+export default async (displayname, email, verificationkey) => { 
+  const subject = `Verify your account`;
+  const templatepath = `../templates/emailverification.html`;
 
   const encryptedData = encrypt(JSON.stringify({ email, verificationkey }));
-  
   const verificationURL = `${process.env.APP_URL}/verify/${encodeURIComponent(encryptedData)}`;
-  
-  console.log('verificationURL', verificationURL);
-  //return await SendMail({toemail, mailsubject, htmltemplate});
+
+  const maildata = {
+    displayname,
+    url: verificationURL
+  };
+
+  sendMail({to: email, subject, templatepath, maildata});
 }

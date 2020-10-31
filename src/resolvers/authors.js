@@ -104,7 +104,7 @@ export const buttonPressRegister = async (_, __, context) => {
   return await signupAuthor(_, variables, context);
 }
 
-const setForAccountVerification = async (email) => { 
+const setForAccountVerification = async (displayname, email) => { 
   // after inserting a user, set for email verification
   const verificationkey = getAlphanumeric();
   const verificationQuery = `
@@ -115,7 +115,7 @@ const setForAccountVerification = async (email) => {
   const verifytracker = await mysql.query(verificationQuery, [email, verificationkey, addMinutesInCurrentTime(VERIFICATION_LINK_EXPIRY_TIME)]);
   
   //send mail for verifying email address
-  await SendEmailVerificationLink(email, verificationkey);
+  await SendEmailVerificationLink(displayname, email, verificationkey);
 };
 
 export const resendVerificationLink = async (_, { email }, context) => { 
@@ -152,7 +152,7 @@ export const signupAuthor = async (_, { input }, context) => {
     throw Error('Error signing up Author.');
   }
 
-  await setForAccountVerification(email);
+  await setForAccountVerification(displayname, email);
 
   return { exist };
 }
