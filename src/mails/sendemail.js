@@ -4,7 +4,7 @@ import path from 'path';
 import SendMail from '../utils/sendemail';
 
 export default async ({ to, subject, templatepath, maildata }) => { 
-  const filepath = path(__dirname, templatepath);
+  const filepath = path.resolve(__dirname, templatepath);
 
   fs.readFile(filepath, { encoding: 'UTF-8' }, (err, templatedata) => { 
     if (!err) {
