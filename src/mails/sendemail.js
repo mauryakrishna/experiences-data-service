@@ -8,7 +8,8 @@ export default async ({ to, subject, templatepath, maildata }) => {
 
   fs.readFile(filepath, { encoding: 'UTF-8' }, (err, templatedata) => { 
     if (!err) {
-      const html = _.template(templatedata, maildata);
+      const compiledTempate = _.template(templatedata);
+      const html = compiledTempate(maildata);
       SendMail({to, subject, html});
     }
     else { 
