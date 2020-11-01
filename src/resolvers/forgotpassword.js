@@ -52,8 +52,8 @@ export default async (_, { input }, context) => {
   }
   
   // at this point user exist and valid
-  const response = await SendResetPasswordLink(displayname, email, resetpasswordlink);
-  if (response) { 
-    return { emailsent: true, userexist: true };
-  }
+  await SendResetPasswordLink(displayname, email, resetpasswordlink);
+  
+  return { emailsent: true, userexist: true };
+
 }
