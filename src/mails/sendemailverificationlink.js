@@ -10,7 +10,8 @@ export default async (displayname, email, verificationkey) => {
 
   const maildata = {
     displayname,
-    url: verificationURL
+    url: verificationURL,
+    writetousemail: process.env.WRITE_TO_US_EMAIL
   };
 
   sendMail({to: email, subject, templatepath, maildata});

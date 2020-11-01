@@ -22,7 +22,6 @@
           cursor: pointer;
           font-size: 20px;
           border: none;
-          margin: 20px;
         }
 
         /* background color here matches with footer on home page */
@@ -45,8 +44,9 @@
       <p style="font-size:'14px'">Hi <%= displayname %>,</p>
       <p style="font-size:'14px'">This is the great step to start sharing your life's experiences to empower others to make their life great.</p>
       <p style="font-size:'14px'">Click the button below to verify your email address.</p>
+      <br/>
       <a 
-        style="padding:'12px 20px'; color:white; background-color:#319795; text-decoration: none; text-align: center; cursor: pointer; font-size: 20px; border: none; margin: 20px;" 
+        style="padding:'12px 20px'; color:white; background-color:#319795; text-decoration: none; text-align: center; cursor: pointer; font-size: 20px; border: none;" 
         type="button" 
         class="verify-button" 
         href="<%= url %>" 
@@ -55,14 +55,17 @@
       >
         Verify my email address
       </a>
-      <p style="font-size:'14px'">Feeling excited and want to know more, write us at buddy@experiences.guru</p>
+      <br/>
+      <p style="font-size:'14px'">Feeling excited and want to know more, write us at <%= writetousemail %></p>
       
-      <p style="font-size:'14px'">Team experiences.</p>
+      <p style="font-size:'14px'">Team experiences.guru</p>
     </div>
+    <!--
     <div class="footer" style="background-color:#f0fff4">
       <span><a class="footer-text" style="font-size: 12px; margin:2px;" href="https://experiences.guru" target="_blank">Experiences©<%= new Date().getFullYear() %></a></span>
       <span><a class="footer-text" style="font-size: 12px; margin:2px;" target="_blank">About</a></span>
       <span><a class="footer-text" style="font-size: 12px; margin:2px;" heref="https://experiences.guru/privacy" target="_blank">Privacy</a></span>
     </div>
+    -->
   </body>
 </html>
