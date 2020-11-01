@@ -5,7 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <style>
         body {
-          width: 600px;
+          width: 500px;
           margin: auto;
         }
 
@@ -37,25 +37,32 @@
 
       </style>
   </head>
-  <body>
+  <body style="width:500px; margin:auto;">
     <div class="header">
 
     </div>
     <div class="content">
-      <p>Hi <%= displayname %>,</p>
-      <p>This is the great step to start sharing your life's experiences to empower others to make their life great.</p>
-      <p>Click the button below to verify your email address.</p>
-      <a type="button" class="verify-button" href="<%= url %>" target="_blank" noopener noreferer>
+      <p style="font-size:'14px'">Hi <%= displayname %>,</p>
+      <p style="font-size:'14px'">This is the great step to start sharing your life's experiences to empower others to make their life great.</p>
+      <p style="font-size:'14px'">Click the button below to verify your email address.</p>
+      <a 
+        style="padding:'12px 20px'; color:white; background-color:#319795; text-decoration: none; text-align: center; cursor: pointer; font-size: 20px; border: none; margin: 20px;" 
+        type="button" 
+        class="verify-button" 
+        href="<%= url %>" 
+        target="_blank" 
+        noopener noreferer
+      >
         Verify my email address
       </a>
-      <p>Feeling excited and want to know more, write us at buddy@experiences.guru</p>
+      <p style="font-size:'14px'">Feeling excited and want to know more, write us at buddy@experiences.guru</p>
       
-      <p>Team experiences.</p>
-    </div>>
-    <div class="footer">
-      <span><a class="footer-text">Experiences©<%= new Date().getFullYear() %></a></span>
-      <span><a class="footer-text">About</a></span>
-      <span><a class="footer-text">Privacy</a></span>
+      <p style="font-size:'14px'">Team experiences.</p>
+    </div>
+    <div class="footer" style="background-color:#f0fff4">
+      <span><a class="footer-text" style="font-size: 12px; margin:2px;" href="https://experiences.guru" target="_blank">Experiences©<%= new Date().getFullYear() %></a></span>
+      <span><a class="footer-text" style="font-size: 12px; margin:2px;" target="_blank">About</a></span>
+      <span><a class="footer-text" style="font-size: 12px; margin:2px;" heref="https://experiences.guru/privacy" target="_blank">Privacy</a></span>
     </div>
   </body>
 </html>
