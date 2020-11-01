@@ -13,7 +13,7 @@ export default async (_, { input }, context) => {
 
   // user exist with that email?
   const query = `
-    SELECT email, isemailverified FROM authors 
+    SELECT email, displayname, isemailverified FROM authors 
     WHERE email=? 
   `;
 
@@ -26,7 +26,7 @@ export default async (_, { input }, context) => {
   }
 
   // where to send it if the email is not verified, so check if verified
-  const { isemailverified } = result[0];
+  const { isemailverified, displayname } = result[0];
   if (!isemailverified) { 
     return {
       emailsent: false,
@@ -52,7 +52,7 @@ export default async (_, { input }, context) => {
   }
   
   // at this point user exist and valid
-  const response = await SendResetPasswordLink(email, resetpasswordlink);
+  const response = await SendResetPasswordLink(displayname, email, resetpasswordlink);
   if (response) { 
     return { emailsent: true, userexist: true };
   }

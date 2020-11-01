@@ -1,20 +1,13 @@
-import SendMail from '../utils/sendemail';
+import sendMail from './sendemail';
 
-export default async (email, resetpasswordlink) => { 
-  const toemail = `${email}`;
-  const mailsubject = `Reset your password`;
-  const htmltemplate = `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      </head>
-      <body>
-      ${resetpasswordlink}
-      </body>
-    </html>
-  `;
+export default async (displayname, email, resetpasswordlink) => { 
+  const subject = `Reset your password`;
+  const templatepath = `../templates/resetpassword.html`;
+  const maildata = {
+    displayname,
+    url: resetpasswordlink,
+    writetousemail: process.env.WRITE_TO_US_EMAIL
+  };
 
-  const response = await SendMail({ toemail, mailsubject, htmltemplate });
+  sendMail({to: email, subject, templatepath, maildata});
 }
