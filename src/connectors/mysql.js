@@ -1,3 +1,4 @@
+import util from 'util';
 import mysql from 'mysql2';
 
 /**
@@ -34,6 +35,6 @@ pool.getConnection(function (err, connection) {
   }
 });
 
-const pomisePool = pool.promise();
-
-export default { query: pomisePool.query };
+//const pomisePool = pool.promise();
+const query = util.promisify(pool.query).bind(pool);
+export default { query };
