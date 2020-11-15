@@ -12,7 +12,7 @@
   "scripts": {
     "build": "babel src -d dist",
     "start": "nodemon -r esm ./index.js",
-    "dev": "cross-env NODE_ENV=development nodemon -r esm ./index.js",
+    "dev": "NODE_ENV=development nodemon -r esm ./index.js",
     "test": "npm run build && mocha --require @babel/register"
   },
   "author": "Krishna Maurya <mauryakrishna1@gmail.com>",
@@ -31,7 +31,6 @@
     "apollo-server-express": "2.13.0",
     "bcrypt": "5.0.0",
     "cookie-parser": "1.4.5",
-    "cross-env": "^7.0.2",
     "crypto-js": "4.0.0",
     "date-fns": "2.16.1",
     "date-fns-tz": "1.0.10",
