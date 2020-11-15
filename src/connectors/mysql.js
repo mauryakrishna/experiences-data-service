@@ -1,13 +1,12 @@
-import util from 'util';
 import mysql from 'mysql2';
 
 /**
  * The below env variable check is to avoid the timewasting may happen because of DB
  * connection refuse.
- */ 
+ */
 const { MYSQL_USER, MYSQL_HOST, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_CONNECTION_LIMIT } = process.env;
 
-if (!MYSQL_HOST || !MYSQL_USER || !MYSQL_PASSWORD || !MYSQL_DATABASE || !MYSQL_CONNECTION_LIMIT) { 
+if (!MYSQL_HOST || !MYSQL_USER || !MYSQL_PASSWORD || !MYSQL_DATABASE || !MYSQL_CONNECTION_LIMIT) {
   console.log(`User:${MYSQL_USER}, Host:${MYSQL_HOST}, Pwd:${MYSQL_PASSWORD}, Database:${MYSQL_DATABASE}, ConnectionLimit${MYSQL_CONNECTION_LIMIT}`);
   throw Error('DB ENV variables are not loading.');
 }
@@ -21,16 +20,20 @@ const mysqlconfig = {
   connectionLimit: process.env.MYSQL_CONNECTION_LIMIT
 };
 
-const conn = mysql.createConnection(mysqlconfig);
+const pool = mysql.createPool(mysqlconfig);
 
-conn.connect(function(err) {
+/*
+  Below code is just to ensure that mysql connection is happening correctly
+*/
+pool.getConnection(function (err, connection) {
   if (err) {
     console.error(`Error connecting with user ${MYSQL_USER} and error ${err}`);
-    return;
+  } else {
+    console.log(`Connection established, thead id ${connection.threadId}.`);
+    connection.release();
   }
-  console.log(`Connection established, thead id ${conn.threadId}.`);
 });
 
-const query = util.promisify(conn.query).bind(conn);
+const pomisePool = pool.promise();
 
-export default { query };
+export default { query: pomisePool.query };
