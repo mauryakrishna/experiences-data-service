@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV == 'development') { 
+if (process.env.NODE_ENV == 'development') {
   require('env2')('./devenv.json');
 }
 else {
@@ -33,18 +33,19 @@ const requestlogging = {
 
 const schemaWithMiddleware = applyMiddleware(schema, ...middlewares);
 
-const context = ({ req }) => { 
+const context = ({ req }) => {
   const token = req.headers.authorization;
-  if (token) { 
+  if (token) {
     try {
-      const { displayname, email, authoruid, languages, region } = jwt.verify(token, process.env.JWT_SECRET);
-      return { displayname, email, authoruid,  languages, region };
+      const userAuthData = jwt.verify(token, process.env.JWT_SECRET);
+      userAuthData.isAuthenticated = true;
+      return userAuthData;
     } catch (e) {
-      console.log('exception', e);
-      throw Error('Some error happens.');
+      console.log('exception', e.message);
+      return { isAuthenticated: false };
     }
   }
-  return {};
+  return { isAuthenticated: false };
 }
 
 const server = new ApolloServer({
@@ -106,6 +107,6 @@ app.listen(PORT, '0.0.0.0', err => {
     console.error(err);
     process.exit(0);
   }
-  
+
   console.log(`Running server at http://localhost:${PORT} in ${NODE_ENV}`);
 });

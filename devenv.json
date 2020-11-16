@@ -2,7 +2,7 @@
   "NODE_ENV": "development",
   "PORT": 4000,
   "MYSQL_USER": "newuser",
-  "MYSQL_HOST": "mysql",
+  "MYSQL_HOST": "localhost",
   "MYSQL_PORT": "3306",
   "MYSQL_PASSWORD": "password",
   "MYSQL_DATABASE": "exp",
