@@ -35,6 +35,6 @@ pool.getConnection(function (err, connection) {
   }
 });
 
-//const pomisePool = pool.promise();
 const query = util.promisify(pool.query).bind(pool);
+
 export default { query };
