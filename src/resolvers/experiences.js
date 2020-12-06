@@ -6,7 +6,7 @@ import { getSlug, getSlugKey } from '../utils/experiences';
 const createARowWithSlugKey = async (authoruid) => { 
 
   if (!authoruid) { 
-    throw Error('Authouid is required');
+    throw Error('Authoruid is required');
   }
   
   const slugkey = getSlugKey();

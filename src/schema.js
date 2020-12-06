@@ -4,7 +4,8 @@ import {
   exampleupdate, examplequery,
   saveExperience, getExperiences, getAnExperienceForRead, getAnExperienceForEdit, saveTitle, publishExperience,
   saveNPublishExperience, deleteAnExperience,
-  getAuthor, buttonPressRegister, signupAuthor, signinAuthor, updateAuthor, verifyMe, resendVerificationLink
+  getAuthor, buttonPressRegister, signupAuthor, signinAuthor, updateAuthor, refreshUserToken,
+  verifyMe, resendVerificationLink
 } from './resolvers';
 
 import forgotPassword from './resolvers/forgotpassword';
@@ -33,7 +34,7 @@ const Mutation = gql`
     saveNPublishExperience(input: SaveNPublishExperienceInput): PublishExperienceResponse
     deleteAnExperience(input: DeleteExperienceInput): DeleteExperienceResponse
     saveTitle(input: SaveTitleInput): SaveTitleResponse
-
+    refreshUserToken(uid: String!): RefreshUserTokenResponse
     verifyEmail(input: VerifyEmailInput): VerifyEmailResponse
     resendVerificationLink(email: String!): ResendVerificaionLinkResponse
     signupAuthor(input: SignupAuthorInput): SignAuthorResponse
@@ -64,6 +65,7 @@ const resolvers = {
     deleteAnExperience,
     saveTitle,
     buttonPressRegister,
+    refreshUserToken,
     signupAuthor,
     updateAuthor,
     forgotPassword,

@@ -62,6 +62,10 @@ const Authors = gql`
   type ResendVerificaionLinkResponse {
     resendsuccess: Boolean
   }
+
+  type RefreshUserTokenResponse {
+    token: String
+  }
 `;
 
 const AuthorsInput = gql`

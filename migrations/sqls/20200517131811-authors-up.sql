@@ -17,6 +17,8 @@ CREATE TABLE `authors` (
   `region` varchar(15) DEFAULT NULL,
   -- Language/locale for buttons, titles and other text from Facebook for this account on experiences
   `languages` varchar(200) DEFAULT NULL,
+  -- refreshtoken storage
+  `refreshtoken` varchar(50) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),

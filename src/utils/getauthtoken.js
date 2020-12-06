@@ -1,11 +1,13 @@
 import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN_EXPIRY } from '../config/constants';
 
-export default (tokendata) => { 
+const getAccessToken = (tokendata) => { 
   if (!tokendata) { 
     throw Error('Token data missing.');
   }
 
-  const expiresIn = 60 * 60 * 24 * 7; // 7 days
+  const expiresIn = ACCESS_TOKEN_EXPIRY;
+
   try {
     return jwt.sign(tokendata, process.env.JWT_SECRET, { expiresIn });
   }
@@ -13,3 +15,5 @@ export default (tokendata) => {
     console.log('Erro generating token', err);
   }
 };
+
+export default getAccessToken;

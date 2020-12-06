@@ -9,7 +9,7 @@ console.log(`Loaded environment is ${process.env.NODE_ENV}`);
 
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { applyMiddleware } from 'graphql-middleware';
 import jwt from 'jsonwebtoken';
@@ -33,25 +33,33 @@ const requestlogging = {
 
 const schemaWithMiddleware = applyMiddleware(schema, ...middlewares);
 
-const context = ({ req }) => {
+const context = ({ req, res }) => {
   const token = req.headers.authorization;
   if (token) {
-    try {
+    try { 
       const userAuthData = jwt.verify(token, process.env.JWT_SECRET);
-      userAuthData.isAuthenticated = true;
+      userAuthData.req = req;
+      userAuthData.res = res;
       return userAuthData;
     } catch (e) {
-      console.log('exception', e.message);
-      return { isAuthenticated: false };
+      // do not make a round trip of responding with 401 and then client making the refreshUserToken request
+      // instead when JWT expired, renew the access token from here
+      throw new AuthenticationError('Un-authorized');
     }
   }
-  return { isAuthenticated: false };
+  return {req, res};
 }
 
 const server = new ApolloServer({
   schema: schemaWithMiddleware,
   context,
   plugins: [],//requestlogging
+  formatError: (err) => {
+    if(err instanceof AuthenticationError) {
+      return { StatusCode: 401 };
+    }
+    return err;
+  },
   onHealthCheck: () => {
     return new Promise((resolve, reject) => {
       // Replace the `true` in this conditional with more specific checks!

@@ -1,9 +1,10 @@
 import bcrypt from 'bcrypt';
 import mysql from '../connectors/mysql';
 import getAuthToken from '../utils/getauthtoken';
+import getRefreshToken from '../utils/getrefreshtoken';
 import getAlphanumeric from '../utils/getalphanumeric';
 import SendEmailVerificationLink from '../mails/sendemailverificationlink';
-import { EXPERIENCES_PER_PAGE, VERIFICATION_LINK_EXPIRY_TIME } from '../config/constants';
+import { EXPERIENCES_PER_PAGE, VERIFICATION_LINK_EXPIRY_TIME, REFRESH_TOKEN_EXPIRY } from '../config/constants';
 import { cursorFormat, createdAtFormat, publishDateFormat, addMinutesInCurrentTime } from '../utils/dateformats';
 
 export const verifyMe = (_, __, context) => {
@@ -14,6 +15,41 @@ export const verifyMe = (_, __, context) => {
   }
   return { valid };
 };
+
+/*
+  Access Token consist of below property with name as mentioned below
+  displayname,
+  email,
+  authoruid,
+  languages,
+  region,
+  shortintro,
+  isemailverified
+*/
+
+export const refreshUserToken = async (_, { uid }, context) => {
+  const {req} = context;
+
+  const refreshtoken = req.cookies.refreshtoken;
+  // verify if refreshtoken already exist
+  const query = `
+    SELECT displayname, email, uid as authoruid, languages, region, shortintro, isemailverified
+    FROM authors 
+    WHERE uid=? AND refreshtoken=? 
+  `;
+
+  const result = await mysql.query(query, [uid, refreshtoken]);
+  
+  if(!result && !result[0]) {
+    return {};
+  }
+
+  // if the refreshtoken is valid
+  const accesstoken = getAuthToken({...result[0]});
+  return {
+    token: accesstoken
+  };
+}
 
 // first 10 and infinit scroll
 // get Authors details along both published experiences and unpublished experiences
@@ -156,10 +192,25 @@ export const signupAuthor = async (_, { input }, context) => {
 
   return { exist };
 }
+//
+const keepRefreshToken = async (refreshtoken, uid) => {
+  const query = `
+    Update authors
+    SET refreshtoken = ?
+    WHERE uid = ?
+  `;
+
+  const result = await mysql.query(query, [refreshtoken, uid]);
+  
+  if(!result || !result.affectedRows) {
+    console.error(`[ERROR] Could not save Refresh token into DB. Need attention`);
+  }
+  return result;
+}
 
 // login
 export const signinAuthor = async (_, { email, password }, context) => {
-
+  
   const query = `
     SELECT displayname, uid as authoruid, languages, region, shortintro, password, isemailverified
     FROM authors
@@ -181,14 +232,36 @@ export const signinAuthor = async (_, { email, password }, context) => {
     }
 
     const match = await bcrypt.compare(password, result[0].password);
+    // remove a password property from JSON
+    delete result[0].password;
+
     if (match) {
       const tokendata = {
         email,
         ...result[0]
       };
+      // access token
       const token = getAuthToken(tokendata);
+      // generate refresh token, 
+      const refreshtoken = getRefreshToken();
+      // insert refresh token into DB for that user
+      await keepRefreshToken(refreshtoken, tokendata.authoruid);
+      // set expiry of refresh token - forever, need refreshtoken rotation implementation for more security
+      const refreshtokenexpiry = REFRESH_TOKEN_EXPIRY;
+
+      // set refresh toekn in cookie
+      const {res} = context;
+      res.cookie('refreshtoken', refreshtoken, {
+        maxAge: refreshtokenexpiry,
+        httpOnly: true,
+        sameSite: 'Strict',
+      });
+
       return {
-        exist: true, author: { ...author, authoruid: author && author.authoruid }, token, isemailverified
+        exist: true, 
+        author: { ...author, authoruid: author && author.authoruid }, 
+        token,
+        isemailverified
       }
     }
     else {
