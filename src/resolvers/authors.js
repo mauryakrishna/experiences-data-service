@@ -255,6 +255,8 @@ export const signinAuthor = async (_, { email, password }, context) => {
         maxAge: refreshtokenexpiry,
         httpOnly: true,
         sameSite: 'Strict',
+        secure: true,
+        path: '/gql'
       });
 
       return {
