@@ -140,7 +140,7 @@ export const buttonPressRegister = async (_, __, context) => {
   return await signupAuthor(_, variables, context);
 }
 
-const setForAccountVerification = async (displayname, email) => {
+const setForAccountVerification = async (email, displayname) => {
   // after inserting a user, set for email verification
   const verificationkey = getAlphanumeric();
   const verificationQuery = `
@@ -188,7 +188,7 @@ export const signupAuthor = async (_, { input }, context) => {
     throw Error('Error signing up Author.');
   }
 
-  await setForAccountVerification(displayname, email);
+  await setForAccountVerification(email, displayname);
 
   return { exist };
 }
