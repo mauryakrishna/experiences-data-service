@@ -140,7 +140,7 @@ export const buttonPressRegister = async (_, __, context) => {
   return await signupAuthor(_, variables, context);
 }
 
-const setForAccountVerification = async (email, displayname) => {
+const setForAccountVerification = async (displayname, email) => {
   // after inserting a user, set for email verification
   const verificationkey = getAlphanumeric();
   const verificationQuery = `
