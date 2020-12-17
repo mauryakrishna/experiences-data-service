@@ -251,7 +251,6 @@ export const deleteAnExperience = async (_, { input }, context) => {
     DELETE FROM experiences WHERE slugkey=? and authoruid=?
   `;
 
-  console.log("slugkey", slugkey);
   const result = await mysql.query(query, [slugkey, authoruid]);
   return { deleted: !!result.affectedRows, slugkey };
 }
