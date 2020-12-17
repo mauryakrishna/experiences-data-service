@@ -51,6 +51,7 @@ const Experiences = gql`
 
   type DeleteExperienceResponse {
     deleted: Boolean!
+    slugkey: String
   }
 `;
 
