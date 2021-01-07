@@ -23,6 +23,7 @@ const Query = gql`
     getAnExperienceForEdit(slugkey: String): EditExperience
     getAuthor(cursor: String, experienceperpage: Int!, uid: String!): GetAuthorResponse
     signinAuthor(email: String!, password: String!): SignAuthorResponse
+    getThoughtsOfExperience(slugkey: String!): GetThoughtsOfExperienceResponse
   }
 `;
 
