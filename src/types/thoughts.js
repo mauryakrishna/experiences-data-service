@@ -9,6 +9,7 @@ const Thoughts = gql`
   }
 
   type GetThoughtsOfExperienceResponse {
+    cursor: String!
     thoughts: [Thought]!
   }
 
