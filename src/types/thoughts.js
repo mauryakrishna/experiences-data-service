@@ -9,27 +9,29 @@ const Thoughts = gql`
   }
 
   type GetThoughtsOfExperienceResponse {
-    thoughts: [thought]!
+    thoughts: [Thought]!
   }
 
   type SaveNewThoughtResponse {
-    saved: boolean!
+    saved: Boolean!
   }
 
   type DeleteAThoughtResponse {
-    deleted: boolean!
+    deleted: Boolean!
   }
 `;
 
 const ThoughtsInput = gql`
   input SaveNewThoughtInput {
-    experienceslugkey: STring!
+    experienceslugkey: String!
     thought: JSONObject!
     thoughtauthoruid: String!
   }
 
-  input DeleteAThought {
+  input DeleteAThoughtInput {
     experienceslugkey: String!
     thoughtauthoruid: String!
   }
 `;
+
+export { Thoughts, ThoughtsInput };
