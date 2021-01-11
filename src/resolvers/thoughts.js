@@ -2,13 +2,14 @@ import mysql from '../connectors/mysql';
 import { THOUGHTS_PER_REQUEST } from "../config/constants";
 import { cursorFormat, createdAtFormat, publishDateFormat } from '../utils/dateformats';
 
-export const saveNewThought = async (_, {input}, context) => {
+export const saveNewThought = async (_, { input }, context) => {
   if(context.authoruid !== input.thoughtauthoruid) {
     return { saved: false }
   }
 
   const query = `
     INSERT INTO thoughts (experienceslugkey, thought, thoughtauthoruid)
+    VALUES (?,?,?)
   `;
   const {experienceslugkey, thought, thoughtauthoruid} = input;
   const result = await mysql.query(query, [experienceslugkey, thought, thoughtauthoruid])
@@ -22,12 +23,12 @@ export const getThoughtsOfExperience = async (_, { cursor, experienceslugkey }, 
     SELECT t.experienceslugkey, t.thought, t.thoughtauthoruid, t.created_at, a.displayname
     FROM thoughts t
     LEFT JOIN authors a ON (a.uid = t.thoughtauthoruid)
-    WHERE experienceslugkey = ? AND created_at < ?
-    ORDER BY created_at DESC
-    LIMIT=?
+    WHERE t.experienceslugkey = ? AND t.created_at < ?
+    ORDER BY t.created_at DESC
+    LIMIT ?
   `;
 
-  const result = await mysql.query(query, [experienceslugkey, cursor, THOUGHTS_PER_REQUEST])
+  let result = await mysql.query(query, [experienceslugkey, cursor, THOUGHTS_PER_REQUEST])
 
   const len = result.length;
   if (len > 0) { 
@@ -45,7 +46,7 @@ export const getThoughtsOfExperience = async (_, { cursor, experienceslugkey }, 
     return thought;
   });
   
-  return { cursor, experiences: result || [] };
+  return { cursor, thoughts: result || [] };
 }
 
 export const deleteAThought = async (_, { input }, context) => {
