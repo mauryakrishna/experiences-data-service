@@ -2,6 +2,7 @@ import { gql } from 'apollo-server-express';
 
 const Thoughts = gql`
   type Thought {
+    thoughtid: Int!,
     experienceslugkey: String!
     thought: JSONObject!
     thoughtauthor: Author
@@ -15,10 +16,12 @@ const Thoughts = gql`
 
   type SaveNewThoughtResponse {
     saved: Boolean!
+    thoughtid: Int
   }
 
   type DeleteAThoughtResponse {
     deleted: Boolean!
+    thoughtid: Int
   }
 `;
 
@@ -32,6 +35,7 @@ const ThoughtsInput = gql`
   input DeleteAThoughtInput {
     experienceslugkey: String!
     thoughtauthoruid: String!
+    thoughtid: Int!
   }
 `;
 
