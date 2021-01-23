@@ -2,7 +2,8 @@ import { gql } from 'apollo-server-express';
 
 const Thoughts = gql`
   type Thought {
-    thoughtid: Int!,
+    thoughtid: Int!
+    isauthor: Boolean!
     experienceslugkey: String!
     thought: JSONObject!
     thoughtauthor: Author

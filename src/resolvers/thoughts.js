@@ -40,6 +40,7 @@ export const getThoughtsOfExperience = async (_, { cursor, experienceslugkey }, 
   result = result.map((thought) => { 
     // for readability used thoughtid in place of id
     thought.thoughtid = thought.id;
+    thought.isauthor = thought.thoughtauthoruid == context.authoruid;
     thought.created_at = publishDateFormat(thought.created_at);
     thought.thoughtauthor = {
       displayname: thought.displayname,
