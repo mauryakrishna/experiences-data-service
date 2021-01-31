@@ -7,6 +7,7 @@ CREATE TABLE `experiences` (
   `title` varchar(180) DEFAULT NULL,
   `subtitle` varchar(2000) DEFAULT NULL,
   `experience` JSON,
+  `thoughtsenabled` boolean NOT NULL DEFAULT 0,
   `tags` varchar(1000) DEFAULT NULL,
   `readcount` bigint(10) DEFAULT 0,
   `ispublished` boolean NOT NULL DEFAULT 0,

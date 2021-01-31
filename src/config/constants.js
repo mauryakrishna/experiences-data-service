@@ -1,4 +1,5 @@
 export const EXPERIENCES_PER_PAGE = 10;
+export const THOUGHTS_PER_REQUEST = 10;
 export const EXPERIENCE_PUBLISHDATE_FORMAT = 'dd MMM yyyy';
 export const EXPERIENCE_CURSOR_FORMAT = 'yyyy-MM-dd HH:mm:ss.SSSSSS';
 export const SHOW_TO_USER_DATEFORMAT = 'DD MMM YYYY, HH:MM A';

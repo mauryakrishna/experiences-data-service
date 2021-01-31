@@ -5,7 +5,8 @@ import {
   saveExperience, getExperiences, getAnExperienceForRead, getAnExperienceForEdit, saveTitle, publishExperience,
   saveNPublishExperience, deleteAnExperience,
   getAuthor, buttonPressRegister, signupAuthor, signinAuthor, updateAuthor, refreshUserToken,
-  verifyMe, resendVerificationLink
+  verifyMe, resendVerificationLink,
+  saveNewThought, getThoughtsOfExperience, deleteAThought,
 } from './resolvers';
 
 import forgotPassword from './resolvers/forgotpassword';
@@ -23,6 +24,7 @@ const Query = gql`
     getAnExperienceForEdit(slugkey: String): EditExperience
     getAuthor(cursor: String, experienceperpage: Int!, uid: String!): GetAuthorResponse
     signinAuthor(email: String!, password: String!): SignAuthorResponse
+    getThoughtsOfExperience(cursor: String, experienceslugkey: String!): GetThoughtsOfExperienceResponse
   }
 `;
 
@@ -42,6 +44,8 @@ const Mutation = gql`
     resetPassword(input: ResetPasswordInput): ResetPasswordResponse
     buttonPressRegister: SignAuthorResponse
     updateAuthor(input: UpdateAuthorInput): UpdateAuthorResponse
+    saveNewThought(input: SaveNewThoughtInput): SaveNewThoughtResponse
+    deleteAThought(input: DeleteAThoughtInput): DeleteAThoughtResponse
   }
 `;
 
@@ -55,7 +59,8 @@ const resolvers = {
     getAnExperienceForRead,
     getAnExperienceForEdit,
     getAuthor,
-    signinAuthor
+    signinAuthor,
+    getThoughtsOfExperience
   },
   Mutation: {
     exampleupdate,
@@ -71,14 +76,15 @@ const resolvers = {
     forgotPassword,
     resetPassword,
     verifyEmail,
-    resendVerificationLink
+    resendVerificationLink,
+    saveNewThought,
+    deleteAThought
   },
   ExperienceResult: {
     __resolveType: (experience) => { 
       return experience.__typename;
     }
   }
-  
 };
 
 const schema = makeExecutableSchema({

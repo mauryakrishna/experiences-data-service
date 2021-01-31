@@ -1,4 +1,14 @@
-From the root of project ./node_modules/db-migrate/bin/db-migrate up
+From the root of project 
+
+====>>>>>> 
+To create the existing tables
+node ./node_modules/db-migrate/bin/db-migrate up `tablename` --env development
+
+To create new table
+node ./node_modules/db-migrate/bin/db-migrate create `tablename` --env development
+
+====>>>>>>
+
 
 -- Below are the steps for resolving the AUTH_MODE not supported for MySql vers 8.0
 Speciic to MacOS
