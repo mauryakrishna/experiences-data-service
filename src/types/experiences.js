@@ -70,6 +70,7 @@ const ExperiencesInput = gql`
 
   input PublishExperienceInput {
     slugkey: String
+    enablethoughts: Boolean
   }
 
   input SaveNPublishExperienceInput {

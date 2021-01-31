@@ -173,16 +173,16 @@ export const getAnExperienceForEdit = async (_, { slugkey }, context) => {
 };
 
 export const publishExperience = async (_, { input }, context) => {
-  const { slugkey } = input;
+  const { slugkey, enablethoughts } = input;
   const { authoruid } = context;
 
   const query = `
     UPDATE experiences 
-    SET publishdate = (SELECT NOW(6)), ispublished=${true}
+    SET thoughtsenabled = ?, publishdate = (SELECT NOW(6)), ispublished=${true}
     WHERE slugkey = ? AND authoruid = ?
   `;
 
-  const result = await mysql.query(query, [slugkey, authoruid]);
+  const result = await mysql.query(query, [enablethoughts, slugkey, authoruid]);
 
   if (!(result && result.affectedRows > 0)) { 
     console.log(`Could not publish experience for slugkey ${slugkey} and author ${authoruid}.`);
