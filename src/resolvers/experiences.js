@@ -1,6 +1,6 @@
 import mysql from '../connectors/mysql';
-import { cursorFormat, createdAtFormat, publishDateFormat } from '../utils/dateformats';
-import { EXPERIENCES_PER_PAGE, EXPERIENCE_PUBLISHDATE_FORMAT } from '../config/constants';
+import { cursorFormat, publishDateFormat } from '../utils/dateformats';
+import { EXPERIENCES_PER_PAGE } from '../config/constants';
 import { getSlug, getSlugKey } from '../utils/experiences';
 
 const createARowWithSlugKey = async (authoruid) => { 
@@ -25,33 +25,12 @@ const createARowWithSlugKey = async (authoruid) => {
   
 };
 
-export const saveTitle = async (_, { input }, context) => { 
-  const { title } = input;
-  const { authoruid } = context;
-
-  const slug = getSlug(title);
-  
-  let slugkey = input.slugkey;
-  // no slugkey means new record
-  if (!slugkey) { 
-    slugkey = await createARowWithSlugKey(authoruid);
-  }
-
-  let query = `
-      UPDATE experiences
-      SET title = ?, slug = ?
-      WHERE slugkey =? and authoruid = ?
-    `;
-
-  const result = await mysql.query(query, [title, slug, slugkey, authoruid]);
-  
-  return { saved: !!(result && result.affectedRows), title, slugkey };
-}
-
 export const saveExperience = async (_, { input }, context) => {
-  const { experience } = input;
+  const { experience, title } = input;
   const { authoruid } = context;
 
+  const slug = title ? getSlug(title) : null;
+  
   let slugkey = input.slugkey;
   // no slugkey means new record
   if (!slugkey) { 
@@ -60,13 +39,13 @@ export const saveExperience = async (_, { input }, context) => {
 
   const query = `
     UPDATE experiences
-    SET experience = ?
+    SET experience = ?, title = ?, slug = ?
     WHERE slugkey = ? and authoruid = ?
   `;
 
-  const result = await mysql.query(query, [JSON.stringify(experience), slugkey, authoruid]);
+  const result = await mysql.query(query, [JSON.stringify(experience), title, slug, slugkey, authoruid]);
 
-  return { saved: !!(result && result.affectedRows), experience, slugkey };
+  return { saved: !!(result && result.affectedRows), slugkey };
 };
 
 // for first 10 experience, load the list for home page

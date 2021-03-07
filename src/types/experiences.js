@@ -26,11 +26,6 @@ const Experiences = gql`
     cursor: String!
     experiences: [Experience!] 
   }
-  type SaveTitleResponse {
-    title: String!
-    slugkey: String!
-    saved: Boolean!
-  }
 
   type EditExperience {
     title: String
@@ -39,7 +34,6 @@ const Experiences = gql`
   }
 
   type SaveExperienceResponse {
-    experience: JSONObject!
     slugkey: String!
     saved: Boolean!
   }
@@ -60,12 +54,8 @@ const ExperiencesInput = gql`
 
   input SaveExperienceInput {
     slugkey: String
-    experience: JSONObject!
-  }
-
-  input SaveTitleInput {
-    slugkey: String
-    title: String!
+    title: String
+    experience: JSONObject
   }
 
   input PublishExperienceInput {
