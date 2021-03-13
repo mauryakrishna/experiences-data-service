@@ -6,6 +6,7 @@ const appendUntitled = (experiences) => {
     experiences = experiences.map((experience) => { 
       if (!experience.title) { 
         experience.title = `Untitled experience`;
+        experience.slug = `untitled`;
       }
       return experience;
     });
