@@ -6,7 +6,7 @@ import getAlphanumeric from '../utils/getalphanumeric';
 import SendEmailVerificationLink from '../mails/sendemailverificationlink';
 import { EXPERIENCES_PER_PAGE, VERIFICATION_LINK_EXPIRY_TIME, REFRESH_TOKEN_EXPIRY } from '../config/constants';
 import { cursorFormat, createdAtFormat, publishDateFormat, addMinutesInCurrentTime } from '../utils/dateformats';
-
+import serialize from "../utils/getexperienceintrotext";
 export const verifyMe = (_, __, context) => {
   const { displayname, authoruid } = context;
   const valid = !!(displayname && authoruid);
@@ -83,6 +83,7 @@ export const getAuthor = async (_, { cursor, experienceperpage, uid, itsme }, co
 
   const author = result[0];
   author.experiences = experiencesResult.map((exp) => {
+    exp.experienceintrotext = serialize(exp.experience);
     exp.created_at = createdAtFormat(exp.created_at);
 
     if (exp.publishdate) {
