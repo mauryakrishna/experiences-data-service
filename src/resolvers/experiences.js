@@ -2,6 +2,7 @@ import mysql from '../connectors/mysql';
 import { cursorFormat, publishDateFormat } from '../utils/dateformats';
 import { EXPERIENCES_PER_PAGE } from '../config/constants';
 import { getSlug, getSlugKey } from '../utils/experiences';
+import serialize from "../utils/getexperienceintrotext";
 
 const createARowWithSlugKey = async (authoruid) => { 
 
@@ -72,6 +73,7 @@ export const getExperiences = async (_, { cursor, experienceperpage }, context) 
   }
 
   result = result.map((exp) => { 
+    exp.experienceintrotext = serialize(exp.experience)
     exp.publishdate = publishDateFormat(exp.publishdate);
     exp.author = {
       displayname: exp.displayname,

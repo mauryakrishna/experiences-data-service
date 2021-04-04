@@ -7,6 +7,7 @@ const Experiences = gql`
     title: String!
     subtitle: String
     experience: JSONObject!
+    experienceintrotext: String
     thoughtsenabled: Boolean!
     slug: String
     slugkey: String
