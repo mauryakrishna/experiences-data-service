@@ -1,6 +1,6 @@
 import { Node } from 'slate';
 
-const FEATURED_TEXT_LENGTH = 200;
+const FEATURED_TEXT_LENGTH = 140;
 
 const serialize = nodes => {
   let text = ""
