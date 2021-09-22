@@ -1,6 +1,14 @@
 From the root of project 
 
 ====>>>>>> 
+Create databse `exp`
+  create database exp;
+
+Create user and grant all access on all database on localhost
+  CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+  GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+  FLUSH PRIVILEGES;
+
 To create the existing tables
 node ./node_modules/db-migrate/bin/db-migrate up `tablename` --env development
 
@@ -24,6 +32,9 @@ Speciic to MacOS
 8. Then inside at mysql prompt ALTER USER 'user'@'localhost' IDENTIFIED by 'somepassword';
 9. Try login in with new password.
 10. Done.
+
+-- if creating tables with db-migrate commands not work out even with above fix directly 
+run the mysql query into mysql prompt.
 
 Also there are two type of authentication mechanism 'caching_sha2_password' (ver 8) and 'mysql_native_password' (ver older).
 
