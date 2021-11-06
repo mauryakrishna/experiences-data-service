@@ -49,3 +49,6 @@ ALTER TABLE tablename ADD columnname data_type;
 
 Drop column command
 ALTER TABLE tablename DROP COLUMN columnname
+
+For mysql 5.7 - Source https://stackoverflow.com/questions/33510184/how-to-change-the-mysql-root-account-password-on-centos7
+to get the intial temporary password on install -> grep 'temporary password' /var/log/mysqld.log
