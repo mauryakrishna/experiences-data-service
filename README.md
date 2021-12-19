@@ -6,23 +6,23 @@
 
 # Getting started
 - Clone the repository
-  ```
-  git clone https://github.com/mauryakrishna/experiences-data-service experiences-data-service
-  ```
+```
+git clone https://github.com/mauryakrishna/experiences-data-service experiences-data-service
+```
 - Install dependencies
-  ```
-  cd experiences-data-service
-  npm install
-  ```
+```
+cd experiences-data-service
+npm install
+```
 - Build and run the project
-  ```
-  npm run dev
-  ```
-  Navigate to `http://localhost:4000/gql` to load the GraphQL playground.
+```
+npm run dev
+```
+Navigate to `http://localhost:4000/gql` to load the GraphQL playground.
 
 - Analyze the build
-  ```
-  yarn build-stats
-  ```
+```
+yarn build-stats
+```
 
-  Refer to [Experiences client](https://github.com/mauryakrishna/experiences-client) for front-end setup.
+Refer to [Experiences client](https://github.com/mauryakrishna/experiences-client) for front-end setup.
